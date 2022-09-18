@@ -7,14 +7,12 @@ import styles from '../styles/Home.module.css'
 
 import { useSeason } from '../lib/data'
 import { useRef } from 'react'
-import { useUser } from '../lib/useUser'
 
-const Home: NextPage = () => {
-  const { logout } = useUser()
+const SessionManagement: NextPage = () => {
   const datePickerRef = useRef<HTMLInputElement | null>(null)
-  const { season } = useSeason("S22-23")
+  const { season, addSession, removeSession } = useSeason("S22-23")
   const { dates, isFetched, ...sessions } = season
-  const filteredDates = Object.values(dates || {}).filter(date => date > dayjs().unix() && date < dayjs().add(6, 'weeks').unix())
+  const filteredDates = Object.values(dates || {})
 
   return (
     <div className={styles.container}>
@@ -25,14 +23,22 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welkom bij zaalvoetbalbazen!
+          Zaalvoetbalbazen ADMIN
         </h1>
+
+        <p className={styles.description}>
+          Alle sessies:
+        </p>
+
+        <input type="datetime-local" ref={datePickerRef} />
+        <button className="btn btn-outline-primary" onClick={() => { console.info(`${datePickerRef.current?.value}:00.000Z`); addSession(dayjs(`${datePickerRef.current?.value}`).unix()) }} disabled={datePickerRef.current === null}>Sessie toevoegen</button>
 
         <div className={styles.sessions}>
           {
             filteredDates.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
                 <Link href={`/S22-23/${date}`}><a>{dayjs.unix(date).format('D MMMM HH:mm')}, plek: {Object.values(sessions[date] || {}).length}/15</a></Link>
+                <button className="btn btn-outline-danger btn-sm" onClick={() => removeSession(date)}>verwijder sessie</button>
               </div>)
           }
         </div>
@@ -49,10 +55,9 @@ const Home: NextPage = () => {
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a> */}
-        <button className="btn btn-outline-warning" onClick={logout}>Afmelden</button>
       </footer>
     </div>
   )
 }
 
-export default Home
+export default SessionManagement

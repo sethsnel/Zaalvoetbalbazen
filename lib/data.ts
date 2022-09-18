@@ -17,8 +17,10 @@ type Sessions = {
 }
 
 type Session = {
-    [key: string]: { name: string, joined: number }
+    [key: string]: ParticipantData
 }
+
+type ParticipantData = { name: string, joined_at: number, profilePic: string }
 
 const useSeason = (seasonKey: string) => {
     const [season, setSeason] = useState<Season>({dates: {}, isFetched: false})
@@ -54,10 +56,11 @@ const useSessionData = (season: string, date: string) => {
         })
     }, [])
 
-    function joinSession(userId: string, name: string) {
-        set(ref(db, `/seasons/${season}/${date}/${userId}`), {
-            name,
-            joined: dayjs().unix()
+    function joinSession(participant: {userId: string, name: string, profilePic: string}) {
+        set(ref(db, `/seasons/${season}/${date}/${participant.userId}`), {
+            name: participant.name,
+            profilePic: participant.profilePic,
+            joined_at: dayjs().unix()
         })
     }
 

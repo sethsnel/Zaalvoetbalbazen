@@ -1,4 +1,4 @@
-import firebase, { initializeApp } from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 // the below imports are option - comment out what you don't need
 import 'firebase/auth'
 import 'firebase/firestore'
@@ -6,6 +6,7 @@ import 'firebase/firestore'
 import 'firebase/analytics'
 import 'firebase/performance'
 import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 // import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
 const clientCredentials = {
@@ -19,7 +20,6 @@ const clientCredentials = {
 }
 
 const firebaseApp = initializeApp(clientCredentials)
-export const firestoreDb = getFirestore()
 
 if (typeof window !== 'undefined') {
     // const analytics = getAnalytics(firebaseApp)
@@ -31,4 +31,7 @@ if (typeof window !== 'undefined') {
     // })
 }
 
+export const firestoreDb = getFirestore()
+export const authInstance = getAuth(firebaseApp)
+authInstance.languageCode = 'nl'
 export default firebaseApp
