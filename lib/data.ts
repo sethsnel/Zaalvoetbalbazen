@@ -29,7 +29,7 @@ const useSeason = (seasonKey: string) => {
         return onValue(ref(db, `/seasons/${seasonKey}`), (snapshot) => {
             setSeason({ ...snapshot.val(), isFetched: true })
         })
-    }, [])
+    }, [seasonKey])
 
     function addSession(date: number) {
         if (season.isFetched) {
@@ -54,7 +54,7 @@ const useSessionData = (season: string, date: string) => {
         return onValue(ref(db, `/seasons/${season}/${date}`), (snapshot) => {
             setSessionData(snapshot.val() || {})
         })
-    }, [])
+    }, [date, season])
 
     function joinSession(participant: {userId: string, name: string, profilePic: string}) {
         set(ref(db, `/seasons/${season}/${date}/${participant.userId}`), {

@@ -42,18 +42,17 @@
 .title {
   margin: 0;
   line-height: 1.15;
-  font-size: 4rem;
+  font-size: 2rem;
 }
 
-.title,
-.description {
+@media (max-width: 800px) {
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+.title {
   text-align: center;
-}
-
-.description {
-  margin: 4rem 0;
-  line-height: 1.5;
-  font-size: 1.5rem;
 }
 
 .code {
@@ -145,15 +144,41 @@
   display: flex;
   min-width: 25em;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
   justify-items: center;
   align-items: center;
   margin: 0 0 1em 0;
 }
 
+.participientInfo {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  justify-items: center;
+  align-items: center;
+}
+
+.buttonWithIcon {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buttonWithIcon svg {
+  margin-left: 1em;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
+    flex-direction: column;
+  }
+
+  .participientRow {
+    min-width: 15em;
+  }
+
+  .participientInfo {
     flex-direction: column;
   }
 }

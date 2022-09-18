@@ -26,7 +26,7 @@ const SessionManagement: NextPage = () => {
           Zaalvoetbalbazen ADMIN
         </h1>
 
-        <p className={styles.description}>
+        <p>
           Alle sessies:
         </p>
 

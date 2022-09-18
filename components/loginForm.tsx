@@ -1,6 +1,8 @@
-import { GoogleAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signInWithPopup } from 'firebase/auth'
+import { GoogleAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signInWithRedirect } from 'firebase/auth'
 import Head from 'next/head'
 import { useRef, useState } from 'react'
+import { BsGoogle } from 'react-icons/bs'
+import { MdEmail } from 'react-icons/md'
 
 import { authInstance } from '../lib/firebaseConfig'
 
@@ -36,7 +38,7 @@ const LoginForm = () => {
 
   const loginWithGoogle = () => {
     setLoggingInState({ ...loggingInState, loggingIn: true })
-    signInWithPopup(authInstance, provider)
+    signInWithRedirect(authInstance, provider)
       .then(() => {
         setLoggingInState({ ...loggingInState, loggingIn: false })
       })
@@ -81,8 +83,8 @@ const LoginForm = () => {
             (loggingInState.linkSent) ?
               <>Login link is verstuurd! Check je mail (ook spam folder).</> :
               (!loginWithEmail) ? (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                <button className="btn btn-outline-success" onClick={() => setLoginWithEmail(!loginWithEmail)}>Met generieke e-mail</button>
-                <button className="btn btn-outline-success" onClick={loginWithGoogle}>Met gmail account</button>
+                <button className={'btn btn-outline-success ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}>Met e-mail<MdEmail /></button>
+                <button className={'btn btn-outline-success ' + styles.buttonWithIcon} onClick={loginWithGoogle}>Met gmail account<BsGoogle /></button>
               </div>) : (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
                 <button className="btn btn-outline-secondary" onClick={() => setLoginWithEmail(!loginWithEmail)}>Terug naar opties</button>
                 <div className="input-group">

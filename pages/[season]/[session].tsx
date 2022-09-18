@@ -45,8 +45,9 @@ const Home: NextPage = () => {
               participients.sort(function (a, b) { return a.joined_at - b.joined_at }).map((participient, index) =>
                 <div key={index} title={dayjs.unix(participient.joined_at).format('D MMMM HH:mm')} className={styles.participientRow}>
                   <Image src={participient.profilePic} height={60} width={60} className={styles.picture} />
-                  <div>
-                    {participient.name} ({dayjs.unix(participient.joined_at).format('D MMMM')})
+                  <div className={styles.participientInfo}>
+                    <span>{participient.name}</span>
+                    <span>({dayjs.unix(participient.joined_at).format('D MMMM')})</span>
                   </div>
                 </div>)
             }
