@@ -1,6 +1,6 @@
 import { GoogleAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signInWithRedirect } from 'firebase/auth'
 import Head from 'next/head'
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BsGoogle } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 
@@ -18,12 +18,12 @@ const LoginForm = () => {
   const [loggingInState, setLoggingInState] = useState<{ errorMessage?: string, loggingIn: boolean, linkSent?: boolean }>({ loggingIn: false })
   const emailInputRef = useRef<null | HTMLInputElement>(null)
 
-  const actionCodeSettings = {
+  const actionCodeSettings = useMemo(() => ({
     url: typeof window !== 'undefined' ? window.location.href : '',
     handleCodeInApp: true
-  }
+  }), [])
 
-  const loginWithCustomAccount = () => {
+  const loginWithCustomAccount = useCallback(() => {
     setLoggingInState({ ...loggingInState, loggingIn: true })
     const sentLinkTo = emailInputRef?.current?.value ?? ''
     sendSignInLinkToEmail(authInstance, sentLinkTo, actionCodeSettings)
@@ -34,7 +34,7 @@ const LoginForm = () => {
       .catch((error) => {
         setLoggingInState({ ...loggingInState, loggingIn: false, errorMessage: error.message })
       })
-  }
+  }, [actionCodeSettings, loggingInState])
 
   const loginWithGoogle = () => {
     setLoggingInState({ ...loggingInState, loggingIn: true })
@@ -61,6 +61,20 @@ const LoginForm = () => {
         setLoggingInState({ ...loggingInState, errorMessage: error.message })
       })
   }
+
+  useEffect(() => {
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        event.preventDefault()
+        loginWithCustomAccount()
+      }
+    }
+
+    document.addEventListener('keydown', keyDownHandler)
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
+  }, [loginWithCustomAccount])
 
   return (
     <div className={styles.container}>
@@ -94,7 +108,6 @@ const LoginForm = () => {
                 <button className="btn btn-outline-success" onClick={loginWithCustomAccount}>Mail inlog link</button>
               </div>)
         }
-
       </main>
     </div >
   )
