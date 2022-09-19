@@ -62,8 +62,8 @@ const Home: NextPage = () => {
                 <div key={index} title={dayjs.unix(participient.responded_at).format('D MMMM HH:mm')} className={styles.participientRow}>
                   <Image src={profiles[userId].profilePic || fallbackImg} height={60} width={60} className={styles.picture} />
                   <div className={styles.participientInfo}>
-                    <span>{profiles[userId].name || profiles[userId].email}</span>
-                    &nbsp;<span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
+                    <span className='me-1'>{profiles[userId].name || profiles[userId].email}</span>
+                    <span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
                   </div>
                 </div>)
             }
@@ -79,8 +79,8 @@ const Home: NextPage = () => {
                 <div key={index} title={dayjs.unix(participient.responded_at).format('D MMMM HH:mm')} className={styles.participientRow}>
                   <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} />
                   <div className={styles.participientInfo}>
-                    <span>{profiles[userId]?.name || profiles[userId]?.email}</span>
-                    &nbsp;<span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
+                    <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
+                    <span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
                   </div>
                 </div>)
             }

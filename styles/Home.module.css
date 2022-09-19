@@ -157,10 +157,10 @@
 
 .participientInfo {
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
-  justify-content: space-evenly;
   justify-items: center;
-  align-items: center;
+  margin-left: 1em;
 }
 
 .sessionButtons {
