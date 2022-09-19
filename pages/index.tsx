@@ -36,7 +36,7 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.sessions}>
-        <p>Eerstvolgende:</p>
+        <p className='fw-bold'>Eerstvolgende:</p>
           <div className={styles.sessionContainer}>
             <SessionLinkComponent
               href={`/${appSettings?.activeSeason}/${upcommingDate}`}
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.sessions}>
-          <p>Komende weken:</p>
+          <p className='fw-bold'>Komende weken:</p>
           {
             commingWeeks.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.sessions}>
-          <p>Toekomst:</p>
+          <p className='fw-bold'>Toekomst:</p>
           {
             later.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
@@ -91,7 +91,7 @@ const SessionLinkComponent = ({ href, date, sessions, limit, badge }: { href: st
   return <Link href={href}>
     <a>
       {dayjs.unix(date).format('D MMMM')}
-      &nbsp;<span className="badge bg-light text-dark">{Object.values(sessions[date] || {}).length}/{limit}</span>
+      &nbsp;<span className="badge bg-light text-dark">{Object.values(sessions[date] || {}).filter((s: any) => s.isPresent).length}/{limit}</span>
       &nbsp;{badge}
     </a>
   </Link>

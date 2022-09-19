@@ -38,7 +38,7 @@ const Home: NextPage = () => {
           <button className='btn btn-outline-secondary'>Terug naar overzicht</button>
         </Link>
         <h3 className='mt-4 mb-4'>
-          Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')} ({participients.length}/{sessionLimit})
+          Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')}
         </h3>
 
         <div className={styles.participientRow}>
@@ -54,7 +54,7 @@ const Home: NextPage = () => {
         </div>
 
         <div style={{ marginTop: '1em' }}>
-          <p className='text-center'>Aanwezig</p>
+          <p className='text-center fw-bold'>Aanwezig ({participients.filter(p => p[1].isPresent).length}/{sessionLimit})</p>
           <div className={styles.participients}>
             {
               //@ts-ignore
@@ -71,7 +71,7 @@ const Home: NextPage = () => {
         </div>
 
         <div style={{ marginTop: '1em' }}>
-          <p className='text-center'>Afwezig</p>
+          <p className='text-center fw-bold'>Afwezig ({participients.filter(p => !p[1].isPresent).length})</p>
           <div className={styles.participients}>
             {
               //@ts-ignore
