@@ -1,7 +1,8 @@
+import 'firebase/auth'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import 'firebase/auth'
 import { ParsedToken, User } from "firebase/auth"
+
 import { authInstance } from './firebaseConfig'
 
 const useUser = () => {

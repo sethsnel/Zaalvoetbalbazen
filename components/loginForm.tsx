@@ -97,8 +97,8 @@ const LoginForm = () => {
             (loggingInState.linkSent) ?
               <>Login link is verstuurd! Check je mail (ook spam folder).</> :
               (!loginWithEmail) ? (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                <button className={'btn btn-outline-success ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}>Met e-mail<MdEmail /></button>
-                <button className={'btn btn-outline-success ' + styles.buttonWithIcon} onClick={loginWithGoogle}>Met gmail account<BsGoogle /></button>
+                <button className={'btn btn-primary ' + styles.buttonWithIcon} onClick={loginWithGoogle}>Met gmail account<BsGoogle /></button>
+                <button className={'btn btn-secondary ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}>Met e-mail<MdEmail /></button>
               </div>) : (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
                 <button className="btn btn-outline-secondary" onClick={() => setLoginWithEmail(!loginWithEmail)}>Terug naar opties</button>
                 <div className="input-group">

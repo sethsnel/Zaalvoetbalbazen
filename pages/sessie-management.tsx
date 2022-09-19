@@ -1,18 +1,19 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import dayjs from 'dayjs'
-import Link from 'next/link'
+import { useRef } from 'react'
+
+import { useSeasonDates } from '../lib/seasonDBO'
+import { useAppSettings } from '../lib/appSettingsDBO'
 
 import styles from '../styles/Home.module.css'
 
-import { useSeason } from '../lib/data'
-import { useRef } from 'react'
-
 const SessionManagement: NextPage = () => {
   const datePickerRef = useRef<HTMLInputElement | null>(null)
-  const { season, addSession, removeSession } = useSeason("S22-23")
-  const { dates, isFetched, ...sessions } = season
-  const filteredDates = Object.values(dates || {})
+  const { appSettings } = useAppSettings()
+  const activeSeason = appSettings?.activeSeason || ''
+  const { seasonDates, addSessionDate, removeSessionDate } = useSeasonDates(activeSeason)
+  const filteredDates = Object.values(seasonDates || {})
 
   return (
     <div className={styles.container}>
@@ -31,14 +32,14 @@ const SessionManagement: NextPage = () => {
         </p>
 
         <input type="datetime-local" ref={datePickerRef} />
-        <button className="btn btn-outline-primary" onClick={() => { console.info(`${datePickerRef.current?.value}:00.000Z`); addSession(dayjs(`${datePickerRef.current?.value}`).unix()) }} disabled={datePickerRef.current === null}>Sessie toevoegen</button>
+        <button className="btn btn-outline-primary" onClick={() => { console.info(`${datePickerRef.current?.value}:00.000Z`); addSessionDate(dayjs(`${datePickerRef.current?.value}`).unix()) }} disabled={datePickerRef.current === null}>Sessie toevoegen</button>
 
         <div className={styles.sessions}>
           {
             filteredDates.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
-                <Link href={`/S22-23/${date}`}><a>{dayjs.unix(date).format('D MMMM HH:mm')}, plek: {Object.values(sessions[date] || {}).length}/15</a></Link>
-                <button className="btn btn-outline-danger btn-sm" onClick={() => removeSession(date)}>verwijder sessie</button>
+                <p className='mt-2 mb-2'>{dayjs.unix(date).format('D MMMM HH:mm')}</p>
+                <button className="btn btn-outline-danger btn-sm" onClick={() => removeSessionDate(date)}>verwijder sessie</button>
               </div>)
           }
         </div>

@@ -3,18 +3,25 @@ import Head from 'next/head'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 
-import styles from '../styles/Home.module.css'
-
-import { useSeason } from '../lib/data'
-import { useRef } from 'react'
+import { useSeasonDates, useSessions } from '../lib/seasonDBO'
+import { useAppSettings } from '../lib/appSettingsDBO'
 import { useUser } from '../lib/useUser'
 
+import styles from '../styles/Home.module.css'
+
 const Home: NextPage = () => {
-  const { logout } = useUser()
-  const datePickerRef = useRef<HTMLInputElement | null>(null)
-  const { season } = useSeason("S22-23")
-  const { dates, isFetched, ...sessions } = season
-  const filteredDates = Object.values(dates || {}).filter(date => date > dayjs().unix() && date < dayjs().add(6, 'weeks').unix())
+  const { user, logout } = useUser()
+  const { appSettings } = useAppSettings()
+  const { seasonDates } = useSeasonDates(appSettings?.activeSeason || '')
+  const { sessions } = useSessions(appSettings?.activeSeason || '')
+  const [upcommingDate, ...commingWeeks] = Object.values(seasonDates || {}).filter(date => date > dayjs().add(-12, 'hours').unix() && date < dayjs().add(4, 'weeks').unix())
+  const later = Object.values(seasonDates || {}).filter(date => date > dayjs().add(4, 'weeks').unix())
+
+  const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
+    if (!session) return <span className="badge bg-secondary">reageren</span>
+    if (session[user?.id || '']?.isPresent) return <span className="badge bg-success">aanwezig</span>
+    return <span className="badge bg-warning">afwezig</span>
+  }
 
   return (
     <div className={styles.container}>
@@ -29,14 +36,49 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.sessions}>
+        <p>Eerstvolgende:</p>
+          <div className={styles.sessionContainer}>
+            <SessionLinkComponent
+              href={`/${appSettings?.activeSeason}/${upcommingDate}`}
+              date={upcommingDate}
+              sessions={sessions}
+              limit={appSettings?.sessionLimit}
+              badge={getMyBadge(sessions[upcommingDate])}  />
+          </div>
+        </div>
+
+        <div className={styles.sessions}>
+          <p>Komende weken:</p>
           {
-            filteredDates.map((date, index) =>
+            commingWeeks.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
-                <Link href={`/S22-23/${date}`}><a>{dayjs.unix(date).format('D MMMM HH:mm')}, plek: {Object.values(sessions[date] || {}).length}/15</a></Link>
+                <SessionLinkComponent
+                  href={`/${appSettings?.activeSeason}/${date}`}
+                  date={date}
+                  sessions={sessions}
+                  limit={appSettings?.sessionLimit}
+                  badge={getMyBadge(sessions[date])} />
+              </div>)
+          }
+        </div>
+
+        <div className={styles.sessions}>
+          <p>Toekomst:</p>
+          {
+            later.map((date, index) =>
+              <div key={index} className={styles.sessionContainer}>
+                <SessionLinkComponent
+                  href={`/${appSettings?.activeSeason}/${date}`}
+                  date={date}
+                  sessions={sessions}
+                  limit={appSettings?.sessionLimit}
+                  badge={getMyBadge(sessions[date])} />
               </div>)
           }
         </div>
       </main>
+
+      {/* TODO: ADD LATER COMMING SESSIONS */}
 
       <footer className={styles.footer}>
         {/* <a
@@ -53,6 +95,16 @@ const Home: NextPage = () => {
       </footer>
     </div>
   )
+}
+
+const SessionLinkComponent = ({ href, date, sessions, limit, badge }: { href: string, date: number, sessions: any, limit?: number, badge: JSX.Element}) => {
+  return <Link href={href}>
+    <a>
+      {dayjs.unix(date).format('D MMMM')}
+      &nbsp;<span className="badge bg-light text-dark">{Object.values(sessions[date] || {}).length}/{limit}</span>
+      &nbsp;{badge}
+    </a>
+  </Link>
 }
 
 export default Home

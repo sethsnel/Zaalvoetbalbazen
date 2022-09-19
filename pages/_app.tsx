@@ -5,7 +5,10 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
 import { useUser } from '../lib/useUser'
+import { useProfiles } from '../lib/seasonDBO'
+import { useAppSettings } from '../lib/appSettingsDBO'
 import LoginForm from '../components/loginForm'
+import UpdateProfile from '../components/updateProfile'
 // import dayjs from 'dayjs'
 
 // var localizedFormat = require('dayjs/plugin/localizedFormat')
@@ -13,6 +16,9 @@ import LoginForm from '../components/loginForm'
 
 function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
   const { user } = useUser()
+  const { appSettings } = useAppSettings()
+  const activeSeason = appSettings?.activeSeason || ''
+  const { profiles } = useProfiles(activeSeason)
 
   return <>
     <Head>
@@ -22,7 +28,10 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
     </Head>
     {
       (user) ?
-        <Component {...pageProps} /> : <LoginForm />
+        (profiles[user?.id || '']) ?
+          <Component {...pageProps} />
+          : <UpdateProfile user={user} activeSeason={activeSeason} />
+        : <LoginForm />
     }
   </>
 }

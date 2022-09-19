@@ -115,26 +115,31 @@
 
 .sessionContainer {
   position: relative;
-  padding: 0.5em 0;
   min-width: 300px;
   text-align: center;
 }
 
+.sessionContainer a {
+  display: block;
+  padding: 0.5em 0;
+  margin: 0;
+}
+
 .sessionContainer button {
   position: absolute;
-  right: -300px;
+  right: -150px;
   top: 0;
   min-width: 175px;
   display: none;
 }
 
-.sessionContainer:hover button {
+.sessionContainer:hover button, .sessionContainer:active button, .sessionContainer:focus button {
   display: inherit;
 }
 
-.sessionContainer:first-of-type a {
+/* .sessionContainer:first-of-type a {
   font-weight: bold;
-}
+} */
 
 .picture {
   border-radius: 50%;
@@ -156,6 +161,15 @@
   justify-content: space-evenly;
   justify-items: center;
   align-items: center;
+}
+
+.sessionButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  justify-items: center;
+  align-items: center;
+  min-width: 15em;
 }
 
 .buttonWithIcon {
