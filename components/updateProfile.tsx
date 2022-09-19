@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { ChangeEvent, useRef, useState } from 'react'
 
 import { useProfiles } from '../lib/seasonDBO'
@@ -14,6 +15,7 @@ type UpdateProfileProps = {
 
 const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
   const { profiles, upsertProfile, uploadFile } = useProfiles(activeSeason)
+  const [profileSaved, setProfileSaved] = useState<boolean>(false)
 
   const nameInputRef = useRef<null | HTMLInputElement>(null)
   const emailInputRef = useRef<null | HTMLInputElement>(null)
@@ -22,7 +24,7 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
   const myProfile = profiles[user.id] ? profiles[user.id] : {
     name: user.name,
     email: user.email,
-    profilePic: user.profilePic,
+    profilePic: user.profilePic
   }
 
   const onFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,8 +38,9 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
     upsertProfile(user.id, {
       name: nameInputRef?.current?.value || '',
       email: emailInputRef?.current?.value || '',
-      profilePic: fileUrl || user.profilePic
+      profilePic: fileUrl || myProfile.profilePic
     })
+    setProfileSaved(true)
   }
 
   return (
@@ -51,10 +54,10 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
           Vul je profiel aan
         </h3>
 
-        <Image src={fileUrl || user.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} />
+        <Image src={fileUrl || myProfile.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} />
 
-        <div className='mt-3' style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>          
-          <div className="input-group mb-2">
+        <div className='mt-3' style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
+          <div className="input-group mb-2" key={myProfile.name}>
             <label className="input-group-text" htmlFor="name">Naam</label>
             <input ref={nameInputRef} id="name" type="text" className="form-control" placeholder="naam" aria-label="naam" aria-describedby="naam" defaultValue={myProfile.name || ''} />
           </div>
@@ -68,6 +71,10 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
           </div>
           <button className="btn btn-primary mt-3" onClick={submitProfile}>Profiel bijwerken</button>
         </div>
+
+        {profileSaved && <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
+          Profiel bijgewerkt,&nbsp;<Link href="/"><a style={{textDecoration: 'underline'}}>ga naar home</a></Link>
+        </div>}
       </main>
     </div>
   )

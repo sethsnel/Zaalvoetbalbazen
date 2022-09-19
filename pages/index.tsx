@@ -78,20 +78,10 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      {/* TODO: ADD LATER COMMING SESSIONS */}
-
       <footer className={styles.footer}>
-        {/* <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a> */}
-        <button className="btn btn-outline-warning" onClick={logout}>Afmelden</button>
+        <Link href='/'><button className="btn btn-outline-primary me-2" type="button">Home</button></Link>
+        <Link href='/profiel'><button className="btn btn-outline-secondary me-2" type="button">Mijn profiel</button></Link>
+        <button className="btn btn-outline-warning" onClick={logout} type="button">Afmelden</button>
       </footer>
     </div>
   )
