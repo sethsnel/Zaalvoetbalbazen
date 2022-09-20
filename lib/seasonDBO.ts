@@ -117,8 +117,12 @@ const useProfiles = (season: string) => {
 
     useEffect(() => {
         return onValue(ref(db, `/seasons/${season}/profiles`), (snapshot) => {
-            setProfiles(snapshot.val() || {})
-            setIsLoading(false)
+            const profiles = snapshot.val()
+            if (profiles !== null) {
+                setProfiles(profiles)
+                setIsLoading(false)
+            }
+            
         }, { onlyOnce: true })
     }, [season])
 
