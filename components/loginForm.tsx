@@ -6,6 +6,7 @@ import { MdEmail } from 'react-icons/md'
 
 import { authInstance } from '../lib/firebaseConfig'
 
+import PageLoader from './pageLoader'
 import styles from '../styles/Home.module.css'
 
 const provider = new GoogleAuthProvider()
@@ -93,7 +94,7 @@ const LoginForm = () => {
 
         {
           (loggingInState.loggingIn) ?
-            <p>Inloggen...</p> :
+            <PageLoader /> :
             (loggingInState.linkSent) ?
               <>Login link is verstuurd! Check je mail (ook spam folder).</> :
               (!loginWithEmail) ? (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
