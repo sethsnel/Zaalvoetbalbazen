@@ -34,7 +34,7 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
           </div>
         </div> :
         (user) ?
-          (profiles[user?.id || '']) ?
+          (profiles[user.id]) ?
             <Component {...pageProps} />
             : <UpdateProfile user={user} activeSeason={activeSeason} />
           : <LoginForm />
