@@ -7,6 +7,7 @@ import { authInstance } from './firebaseConfig'
 
 const useUser = () => {
   const [user, setUser] = useState<UserProfile | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const router = useRouter()
 
   const logout = async () => {
@@ -33,6 +34,7 @@ const useUser = () => {
         //removeUserCookie()
         setUser(undefined)
       }
+      setIsLoading(false)
     })
 
     // const userFromCookie = getUserFromCookie()
@@ -47,7 +49,7 @@ const useUser = () => {
     }
   }, [])
 
-  return { user, logout }
+  return { user, logout, isLoading }
 }
 
 export { useUser }

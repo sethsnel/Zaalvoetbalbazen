@@ -14,7 +14,7 @@ const useAppSettings = () => {
     useEffect(() => {
         return onValue(ref(db, `/appSettings`), (snapshot) => {
             setAppSettings({ ...snapshot.val() })
-        })
+        }, { onlyOnce: true })
     }, [])
 
     return { appSettings }

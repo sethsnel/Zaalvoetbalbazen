@@ -42,14 +42,14 @@ const Home: NextPage = () => {
         </h3>
 
         <div className={styles.participientRow}>
-          <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} />
+          <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
           <div className={styles.participientInfo}>
             <span>mijn status: {myStatus}</span>
           </div>
         </div>
 
         <div className={styles.sessionButtons}>
-          <button className="btn btn-primary" onClick={() => joinSession(user?.id ?? '')} disabled={!canJoin}>Deelnemen</button>
+          <button className="btn btn-success" onClick={() => joinSession(user?.id ?? '')} disabled={!canJoin}>Deelnemen</button>
           <button className="btn btn-outline-warning" onClick={() => leaveSession(user?.id ?? '')} disabled={!canLeave}>Afmelden</button>
         </div>
 
@@ -60,9 +60,9 @@ const Home: NextPage = () => {
               //@ts-ignore
               participients.filter(p => p[1].isPresent).map(([userId, participient], index) =>
                 <div key={index} title={dayjs.unix(participient.responded_at).format('D MMMM HH:mm')} className={styles.participientRow}>
-                  <Image src={profiles[userId].profilePic || fallbackImg} height={60} width={60} className={styles.picture} />
+                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
                   <div className={styles.participientInfo}>
-                    <span className='me-1'>{profiles[userId].name || profiles[userId].email}</span>
+                    <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
                     <span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
                   </div>
                 </div>)
@@ -77,7 +77,7 @@ const Home: NextPage = () => {
               //@ts-ignore
               participients.filter(p => !p[1].isPresent).map(([userId, participient], index) =>
                 <div key={index} title={dayjs.unix(participient.responded_at).format('D MMMM HH:mm')} className={styles.participientRow}>
-                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} />
+                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
                     <span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>

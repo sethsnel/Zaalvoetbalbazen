@@ -15,11 +15,11 @@ import UpdateProfile from '../components/updateProfile'
 // dayjs.extend(localizedFormat)
 
 function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
-  const { user } = useUser()
+  const { user, isLoading } = useUser()
   const { appSettings } = useAppSettings()
   const activeSeason = appSettings?.activeSeason || ''
-  const { profiles } = useProfiles(activeSeason)
-
+  const { profiles, isLoading: isLoadingProfiles } = useProfiles(activeSeason)
+  
   return <>
     <Head>
       <title>Zaalvoetbalbazen</title>
@@ -27,11 +27,17 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     {
-      (user) ?
-        (profiles[user?.id || '']) ?
-          <Component {...pageProps} />
-          : <UpdateProfile user={user} activeSeason={activeSeason} />
-        : <LoginForm />
+      (isLoading || isLoadingProfiles) ?
+        <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+          <div className="spinner-border" role="status" style={{ width: '4rem', height: '4rem' }}>
+            <span className="visually-hidden">App laden...</span>
+          </div>
+        </div> :
+        (user) ?
+          (profiles[user?.id || '']) ?
+            <Component {...pageProps} />
+            : <UpdateProfile user={user} activeSeason={activeSeason} />
+          : <LoginForm />
     }
   </>
 }

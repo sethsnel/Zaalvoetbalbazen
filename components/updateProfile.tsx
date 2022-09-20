@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ChangeEvent, useRef, useState } from 'react'
 
-import { useProfiles } from '../lib/seasonDBO'
+import { useProfilesManagement } from '../lib/seasonDBO'
 import { UserProfile } from '../lib/useUser'
 
 import styles from '../styles/Home.module.css'
@@ -14,7 +14,7 @@ type UpdateProfileProps = {
 }
 
 const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
-  const { profiles, upsertProfile, uploadFile } = useProfiles(activeSeason)
+  const { profiles, upsertProfile, uploadFile } = useProfilesManagement(activeSeason)
   const [profileSaved, setProfileSaved] = useState<boolean>(false)
 
   const nameInputRef = useRef<null | HTMLInputElement>(null)
@@ -54,7 +54,7 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
           Vul je profiel aan
         </h3>
 
-        <Image src={fileUrl || myProfile.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} />
+        <Image src={fileUrl || myProfile.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' />
 
         <div className='mt-3' style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
           <div className="input-group mb-2" key={myProfile.name}>

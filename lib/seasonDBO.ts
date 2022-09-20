@@ -36,7 +36,7 @@ type Profile = {
 
 type ParticipantData = { responded_at: number, isPresent: boolean }
 
-const useSeasonDates = (seasonKey: string) => {
+const useSeasonDatesManagement = (seasonKey: string) => {
     const [seasonDates, setSeasonDates] = useState<{ [key: string]: number }>()
 
     useEffect(() => {
@@ -57,6 +57,18 @@ const useSeasonDates = (seasonKey: string) => {
     }
 
     return { seasonDates, addSessionDate, removeSessionDate }
+}
+
+const useSeasonDates = (seasonKey: string) => {
+    const [seasonDates, setSeasonDates] = useState<{ [key: string]: number }>()
+
+    useEffect(() => {
+        return onValue(ref(db, `/seasons/${seasonKey}/dates`), (snapshot) => {
+            setSeasonDates({ ...snapshot.val() })
+        }, { onlyOnce: true })
+    }, [seasonKey])
+
+    return { seasonDates }
 }
 
 const useSessions = (seasonKey: string) => {
@@ -101,6 +113,20 @@ const useSessionData = (season: string, date: string) => {
 
 const useProfiles = (season: string) => {
     const [profiles, setProfiles] = useState<Profiles>({})
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+
+    useEffect(() => {
+        return onValue(ref(db, `/seasons/${season}/profiles`), (snapshot) => {
+            setProfiles(snapshot.val() || {})
+            setIsLoading(false)
+        }, { onlyOnce: true })
+    }, [season])
+
+    return { profiles, isLoading }
+}
+
+const useProfilesManagement = (season: string) => {
+    const [profiles, setProfiles] = useState<Profiles>({})
 
     useEffect(() => {
         return onValue(ref(db, `/seasons/${season}/profiles`), (snapshot) => {
@@ -127,4 +153,4 @@ const useProfiles = (season: string) => {
     return { profiles, upsertProfile, uploadFile }
 }
 
-export { db, useSeasonDates, useSessions, useSessionData, useProfiles }
+export { db, useSeasonDates, useSeasonDatesManagement, useSessions, useSessionData, useProfiles, useProfilesManagement }

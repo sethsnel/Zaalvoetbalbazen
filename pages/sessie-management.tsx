@@ -3,7 +3,7 @@ import Head from 'next/head'
 import dayjs from 'dayjs'
 import { useRef } from 'react'
 
-import { useSeasonDates } from '../lib/seasonDBO'
+import { useSeasonDatesManagement } from '../lib/seasonDBO'
 import { useAppSettings } from '../lib/appSettingsDBO'
 
 import styles from '../styles/Home.module.css'
@@ -12,7 +12,7 @@ const SessionManagement: NextPage = () => {
   const datePickerRef = useRef<HTMLInputElement | null>(null)
   const { appSettings } = useAppSettings()
   const activeSeason = appSettings?.activeSeason || ''
-  const { seasonDates, addSessionDate, removeSessionDate } = useSeasonDates(activeSeason)
+  const { seasonDates, addSessionDate, removeSessionDate } = useSeasonDatesManagement(activeSeason)
   const filteredDates = Object.values(seasonDates || {})
 
   return (
