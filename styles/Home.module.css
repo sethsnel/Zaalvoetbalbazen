@@ -116,13 +116,16 @@
 .sessionContainer {
   position: relative;
   min-width: 300px;
-  text-align: center;
 }
 
 .sessionContainer a {
   display: block;
   padding: 0.5em 0;
   margin: 0;
+}
+
+.sessionContainer a span {
+  float: right;
 }
 
 .sessionContainer button {
