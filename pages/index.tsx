@@ -91,7 +91,7 @@ const SessionLinkComponent = ({ href, date, sessions, limit, badge }: { href: st
   return <Link href={href}>
     <a>
       {dayjs.unix(date).format('D MMMM')}
-      &nbsp;<span className="badge bg-light text-dark">{Object.values(sessions[date] || {}).filter((s: any) => s.isPresent).length}/{limit}</span>
+      &nbsp;<span className="badge bg-light text-dark ms-2">{Object.values(sessions[date] || {}).filter((s: any) => s.isPresent).length}/{limit}</span>
       &nbsp;{badge}
     </a>
   </Link>
