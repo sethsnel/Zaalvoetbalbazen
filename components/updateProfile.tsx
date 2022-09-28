@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ChangeEvent, useRef, useState } from 'react'
 
-import { useProfilesManagement } from '../lib/seasonDBO'
+import { useProfileManagement } from '../lib/seasonDBO'
 import { UserProfile } from '../lib/useUser'
 
 import styles from '../styles/Home.module.css'
@@ -14,17 +14,18 @@ type UpdateProfileProps = {
 }
 
 const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
-  const { profiles, upsertProfile, uploadFile } = useProfilesManagement(activeSeason)
+  const { profile, upsertProfile, uploadFile } = useProfileManagement(activeSeason, user.id)
   const [profileSaved, setProfileSaved] = useState<boolean>(false)
 
   const nameInputRef = useRef<null | HTMLInputElement>(null)
   const emailInputRef = useRef<null | HTMLInputElement>(null)
   const [fileUrl, setFileUrl] = useState<string | null>(null)
 
-  const myProfile = profiles[user.id] ? profiles[user.id] : {
+  const myProfile = {
     name: user.name,
     email: user.email,
-    profilePic: user.profilePic
+    profilePic: user.profilePic ?? '',
+    ...profile
   }
 
   const onFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +39,7 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
     upsertProfile(user.id, {
       name: nameInputRef?.current?.value || '',
       email: emailInputRef?.current?.value || '',
-      profilePic: fileUrl || myProfile.profilePic
+      profilePic: fileUrl ?? myProfile.profilePic
     })
     setProfileSaved(true)
   }

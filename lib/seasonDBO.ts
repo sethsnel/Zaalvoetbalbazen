@@ -4,6 +4,7 @@ import { getDatabase, ref, onValue, set, remove, update } from "firebase/databas
 import { useEffect, useState } from "react"
 
 import firebaseApp from "./firebaseConfig"
+import useLocalStorage from "./useLocalStorage"
 
 const db = getDatabase(firebaseApp)
 
@@ -28,16 +29,16 @@ type Profiles = {
 }
 
 type Profile = {
-    name: string | null,
-    email: string | null,
-    profilePic: string | null
-    joined: { [key: string]: boolean }
+    name?: string
+    email?: string
+    profilePic?: string
+    joined?: { [key: string]: boolean }
 }
 
 type ParticipantData = { responded_at: number, isPresent: boolean }
 
 const useSeasonDatesManagement = (seasonKey: string) => {
-    const [seasonDates, setSeasonDates] = useState<{ [key: string]: number }>()
+    const [seasonDates, setSeasonDates] = useLocalStorage<{ [key: string]: number }>(`seasonDatesMgt`)
 
     useEffect(() => {
         return onValue(ref(db, `/seasons/${seasonKey}/dates`), (snapshot) => {
@@ -60,7 +61,7 @@ const useSeasonDatesManagement = (seasonKey: string) => {
 }
 
 const useSeasonDates = (seasonKey: string) => {
-    const [seasonDates, setSeasonDates] = useState<{ [key: string]: number }>()
+    const [seasonDates, setSeasonDates] = useLocalStorage<{ [key: string]: number }>(`seasonDates`)
 
     useEffect(() => {
         return onValue(ref(db, `/seasons/${seasonKey}/dates`), (snapshot) => {
@@ -72,7 +73,7 @@ const useSeasonDates = (seasonKey: string) => {
 }
 
 const useSessions = (seasonKey: string) => {
-    const [sessions, setSessions] = useState<Sessions>({})
+    const [sessions, setSessions] = useLocalStorage<Sessions>(`sessions`, {})
 
     useEffect(() => {
         return onValue(ref(db, `/seasons/${seasonKey}/sessions`), (snapshot) => {
@@ -84,15 +85,17 @@ const useSessions = (seasonKey: string) => {
 }
 
 const useSessionData = (season: string, date: string) => {
-    const [sessionData, setSessionData] = useState<Session>({})
+    const [sessionData, setSessionData] = useLocalStorage<Session>(`session-${date}`,{})
 
     useEffect(() => {
+        if (!date) return
         return onValue(ref(db, `/seasons/${season}/sessions/${date}`), (snapshot) => {
             setSessionData(snapshot.val() || {})
         })
-    }, [date, season])
+    }, [season, date])
 
     function joinSession(userId: string) {
+        if (!date) return
         set(ref(db, `/seasons/${season}/sessions/${date}/${userId}`), {
             responded_at: dayjs().unix(),
             isPresent: true
@@ -101,6 +104,7 @@ const useSessionData = (season: string, date: string) => {
     }
 
     function leaveSession(userId: string) {
+        if (!date) return
         set(ref(db, `/seasons/${season}/sessions/${date}/${userId}`), {
             responded_at: dayjs().unix(),
             isPresent: false
@@ -112,8 +116,9 @@ const useSessionData = (season: string, date: string) => {
 }
 
 const useProfiles = (season: string) => {
-    const [profiles, setProfiles] = useState<Profiles>({})
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const initialValue = {}
+    const [profiles, setProfiles] = useLocalStorage<Profiles>(`profiles`, initialValue)
+    const [isLoading, setIsLoading] = useState<boolean>(profiles === initialValue)
 
     useEffect(() => {
         return onValue(ref(db, `/seasons/${season}/profiles`), (snapshot) => {
@@ -122,25 +127,50 @@ const useProfiles = (season: string) => {
                 setProfiles(profiles)
                 setIsLoading(false)
             }
-            
+
         }, { onlyOnce: true })
     }, [season])
 
     return { profiles, isLoading }
 }
 
-const useProfilesManagement = (season: string) => {
-    const [profiles, setProfiles] = useState<Profiles>({})
+const useMyProfile = (season: string, userId: string) => {
+    const initialValue = {}
+    const [profile, setProfile] = useLocalStorage<Profile>(`profile`, initialValue)
+    const [isLoading, setIsLoading] = useState<boolean>(profile === initialValue)
 
     useEffect(() => {
-        return onValue(ref(db, `/seasons/${season}/profiles`), (snapshot) => {
-            setProfiles(snapshot.val() || {})
-        })
-    }, [season])
+        if (!userId) {
+            setIsLoading(false)
+        }
+        else {
+            return onValue(ref(db, `/seasons/${season}/profiles/${userId}`), (snapshot) => {
+                const profile = snapshot.val()
+                if (profile !== null) {
+                    setProfile(profile)
+                    setIsLoading(false)
+                }
+    
+            }, { onlyOnce: true })
+        }
+    }, [season, userId])
 
-    function upsertProfile(userId: string, profile: Omit<Profile, 'joined'>) {
-        if (profiles[userId]) {
-            set(ref(db, `/seasons/${season}/profiles/${userId}`), { ...profiles[userId], ...profile })
+    return { profile, isLoading }
+}
+
+const useProfileManagement = (season: string, userId: string) => {
+    const [profile, setProfile] = useLocalStorage<Profile>(`profileMgt`,{})
+
+    useEffect(() => {
+        if (!userId) return
+        return onValue(ref(db, `/seasons/${season}/profiles/${userId}`), (snapshot) => {
+            setProfile(snapshot.val() || {})
+        })
+    }, [season, userId])
+
+    function upsertProfile(userId: string, updatedProfile: Omit<Profile, 'joined'>) {
+        if (profile) {
+            set(ref(db, `/seasons/${season}/profiles/${userId}`), { profile, ...updatedProfile })
         }
         else {
             set(ref(db, `/seasons/${season}/profiles/${userId}`), profile)
@@ -154,7 +184,7 @@ const useProfilesManagement = (season: string) => {
         return await getDownloadURL(uploadTask.ref)
     }
 
-    return { profiles, upsertProfile, uploadFile }
+    return { profile, upsertProfile, uploadFile }
 }
 
-export { db, useSeasonDates, useSeasonDatesManagement, useSessions, useSessionData, useProfiles, useProfilesManagement }
+export { db, useSeasonDates, useSeasonDatesManagement, useSessions, useSessionData, useProfiles, useMyProfile, useProfileManagement }

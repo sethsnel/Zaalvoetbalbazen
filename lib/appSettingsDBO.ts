@@ -1,15 +1,17 @@
 import { onValue, ref } from "firebase/database"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 
 import { db } from "./seasonDBO"
+import useLocalStorage from "./useLocalStorage"
 
 type AppSettings = {
     activeSeason: string
     sessionLimit: number
+    admins: { [userId: string]: boolean }
 }
 
 const useAppSettings = () => {
-    const [appSettings, setAppSettings] = useState<AppSettings>()
+    const [appSettings, setAppSettings] = useLocalStorage<AppSettings>('appsettings')
 
     useEffect(() => {
         return onValue(ref(db, `/appSettings`), (snapshot) => {
@@ -17,7 +19,11 @@ const useAppSettings = () => {
         }, { onlyOnce: true })
     }, [])
 
-    return { appSettings }
+    function isAdmin(userId: string): boolean {
+        return appSettings?.admins[userId] ?? false
+    }
+
+    return { appSettings, isAdmin }
 }
 
 export { useAppSettings }

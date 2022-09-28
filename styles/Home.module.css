@@ -3,7 +3,7 @@
 }
 
 .main {
-  min-height: 100vh;
+  min-height: calc(100vh - 65px);
   padding: 4rem 0;
   flex: 1;
   display: flex;
@@ -183,6 +183,19 @@
 
 .buttonWithIcon svg {
   margin-left: 1em;
+}
+
+.participientAdminRow {
+  display: flex;
+  min-width: 20em;
+  flex-direction: row;
+  justify-content: space-between;
+  justify-items: center;
+  align-items: center;
+}
+
+.participientAdminRow .name {
+  flex-grow: 1;
 }
 
 @media (max-width: 600px) {

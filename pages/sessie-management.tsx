@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import dayjs from 'dayjs'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 import { useSeasonDatesManagement } from '../lib/seasonDBO'
 import { useAppSettings } from '../lib/appSettingsDBO'
@@ -13,7 +13,8 @@ const SessionManagement: NextPage = () => {
   const { appSettings } = useAppSettings()
   const activeSeason = appSettings?.activeSeason || ''
   const { seasonDates, addSessionDate, removeSessionDate } = useSeasonDatesManagement(activeSeason)
-  const filteredDates = Object.values(seasonDates || {})
+  const filteredDates = Object.values(seasonDates || {}).filter(date => date > dayjs().unix())
+  const [dateIssue, setdateIssue] = useState(false)
 
   return (
     <div className={styles.container}>
@@ -32,7 +33,18 @@ const SessionManagement: NextPage = () => {
         </p>
 
         <input type="datetime-local" ref={datePickerRef} />
-        <button className="btn btn-outline-primary" onClick={() => { console.info(`${datePickerRef.current?.value}:00.000Z`); addSessionDate(dayjs(`${datePickerRef.current?.value}`).unix()) }} disabled={datePickerRef.current === null}>Sessie toevoegen</button>
+        <button className="btn btn-outline-primary mt-3" onClick={() => {
+          if (isNaN(dayjs(`${datePickerRef.current?.value}`).unix())) {
+            setdateIssue(true)
+            return
+          }
+          addSessionDate(dayjs(`${datePickerRef.current?.value}`).unix())
+          setdateIssue(false)
+        }} disabled={datePickerRef.current === null}>Sessie toevoegen</button>
+
+        {dateIssue && <div className="alert alert-danger d-flex align-items-center mt-3" role="alert">
+          Geen geldige datum, zijn datum en tijd goed ingevoerd?
+        </div>}
 
         <div className={styles.sessions}>
           {
@@ -44,19 +56,6 @@ const SessionManagement: NextPage = () => {
           }
         </div>
       </main>
-
-      <footer className={styles.footer}>
-        {/* <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a> */}
-      </footer>
     </div>
   )
 }

@@ -5,22 +5,27 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
 import { useUser } from '../lib/useUser'
-import { useProfiles } from '../lib/seasonDBO'
+import { useMyProfile } from '../lib/seasonDBO'
 import { useAppSettings } from '../lib/appSettingsDBO'
 import LoginForm from '../components/loginForm'
 import UpdateProfile from '../components/updateProfile'
 import PageLoader from '../components/pageLoader'
-// import dayjs from 'dayjs'
+import dynamic from 'next/dynamic'
+import dayjs from 'dayjs'
+import 'dayjs/locale/nl'
 
-// var localizedFormat = require('dayjs/plugin/localizedFormat')
-// dayjs.extend(localizedFormat)
+const Navbar = dynamic(() => import('../components/navbar').then((mod) => mod.default), {
+  ssr: false,
+})
+
+dayjs.locale('nl')
 
 function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
-  const { user, isLoading } = useUser()
-  const { appSettings } = useAppSettings()
+  const { user, isLoading, logout } = useUser()
+  const { appSettings, isAdmin } = useAppSettings()
   const activeSeason = appSettings?.activeSeason || ''
-  const { profiles, isLoading: isLoadingProfiles } = useProfiles(activeSeason)
-  
+  const { profile, isLoading: isLoadingProfile } = useMyProfile(activeSeason, user?.id || '')
+
   return <>
     <Head>
       <title>Zaalvoetbalbazen</title>
@@ -28,11 +33,14 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     {
-      (isLoading || isLoadingProfiles) ?
+      (isLoading || isLoadingProfile) ?
         <PageLoader fullscreen={true} /> :
         (user) ?
-          (profiles[user.id]) ?
-            <Component {...pageProps} />
+          (profile) ?
+            <>
+              <Navbar isAdmin={isAdmin(user.id)} logout={logout} />
+              <Component {...pageProps} />
+            </>
             : <UpdateProfile user={user} activeSeason={activeSeason} />
           : <LoginForm />
     }

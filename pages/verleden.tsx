@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import dayjs from 'dayjs'
-import Link from 'next/link'
+import Image from 'next/image'
 
-import { useSeasonDates, useSessions } from '../lib/seasonDBO'
+import { useMyProfile, useSeasonDates, useSessions } from '../lib/seasonDBO'
 import { useAppSettings } from '../lib/appSettingsDBO'
 import { useUser } from '../lib/useUser'
 
@@ -12,10 +12,10 @@ import styles from '../styles/Home.module.css'
 const Home: NextPage = () => {
   const { user } = useUser()
   const { appSettings } = useAppSettings()
+  const { profile } = useMyProfile(appSettings?.activeSeason || '', user?.id || '')
   const { seasonDates } = useSeasonDates(appSettings?.activeSeason || '')
   const { sessions } = useSessions(appSettings?.activeSeason || '')
-  const [upcommingDate, ...commingWeeks] = Object.values(seasonDates || {}).filter(date => date > dayjs().add(-12, 'hours').unix() && date < dayjs().add(4, 'weeks').unix())
-  const later = Object.values(seasonDates || {}).filter(date => date > dayjs().add(4, 'weeks').unix())
+  const oldSessions = Object.values(seasonDates || {}).filter(date => date < dayjs().unix())
 
   const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
     if (!session || !session[user?.id || '']) return <span className="badge bg-secondary">reageren</span>
@@ -31,41 +31,12 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welkom bij zaalvoetbalbazen!
-        </h1>
+        <Image src={profile?.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' />
 
         <div className={styles.sessions}>
-        <p className='fw-bold'>Eerstvolgende:</p>
-          <div className={styles.sessionContainer}>
-            <SessionLinkComponent
-              href={`/${appSettings?.activeSeason}/${upcommingDate}`}
-              date={upcommingDate}
-              sessions={sessions}
-              limit={appSettings?.sessionLimit}
-              badge={getMyBadge(sessions[upcommingDate])}  />
-          </div>
-        </div>
-
-        <div className={styles.sessions}>
-          <p className='fw-bold'>Komende weken:</p>
+          <p className='fw-bold'>Verleden:</p>
           {
-            commingWeeks.map((date, index) =>
-              <div key={index} className={styles.sessionContainer}>
-                <SessionLinkComponent
-                  href={`/${appSettings?.activeSeason}/${date}`}
-                  date={date}
-                  sessions={sessions}
-                  limit={appSettings?.sessionLimit}
-                  badge={getMyBadge(sessions[date])} />
-              </div>)
-          }
-        </div>
-
-        <div className={styles.sessions}>
-          <p className='fw-bold'>Toekomst:</p>
-          {
-            later.map((date, index) =>
+            oldSessions.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
                 <SessionLinkComponent
                   href={`/${appSettings?.activeSeason}/${date}`}
@@ -82,13 +53,11 @@ const Home: NextPage = () => {
 }
 
 const SessionLinkComponent = ({ href, date, sessions, limit, badge }: { href: string, date: number, sessions: any, limit?: number, badge: JSX.Element}) => {
-  return <Link href={href}>
-    <a>
+  return <a>
       {dayjs.unix(date).format('D MMMM')}
       &nbsp;<span className="badge bg-light text-dark ms-2">{Object.values(sessions[date] || {}).filter((s: any) => s.isPresent).length}/{limit}</span>
       &nbsp;{badge}
     </a>
-  </Link>
 }
 
 export default Home
