@@ -36,7 +36,7 @@ const SessionManagement: NextPage = () => {
             Object.values(profiles).map((profile, index) =>
                 <div key={index} className={`${styles.participientAdminRow} mb-1`}>
                   <Image src={profile?.profilePic || fallbackImg} height={40} width={40} className={styles.picture} objectFit='cover' />
-                  <p className={`${styles.name} ms-3 mb-0`}>{profile.name}</p>
+                  <p className={`${styles.name} ms-3 mb-0`}>{profile.name || profile.email}</p>
                   <p className='mb-0'> {countHistoricSessionsJoined(profile.joined)}</p>
                 </div>
               )

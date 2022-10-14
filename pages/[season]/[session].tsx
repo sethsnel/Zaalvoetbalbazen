@@ -4,28 +4,39 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ChangeEvent } from 'react'
 
-import { useProfiles, useSessionData } from '../../lib/seasonDBO'
+import { useProfiles, useSessionData, useSessions } from '../../lib/seasonDBO'
 import { useAppSettings } from '../../lib/appSettingsDBO'
 import { useUser } from '../../lib/useUser'
 
 import styles from '../../styles/Home.module.css'
 
-const Home: NextPage = () => {
+const SessionPage: NextPage = () => {
   const router = useRouter()
   const { user } = useUser()
 
   const { appSettings } = useAppSettings()
   const { sessionData, joinSession, leaveSession } = useSessionData(router.query.season as string, router.query.session as string)
   const { profiles } = useProfiles(router.query.season as string)
+  const { getNextSession } = useSessions(appSettings?.activeSeason || '')
+  const nextSession = getNextSession(parseInt(router.query.session as string))
+
   const participients = Object.entries(sessionData).sort(function (a, b) { return a[1].responded_at - b[1].responded_at })
 
   const sessionLimit = appSettings?.sessionLimit || 0
-  const canJoin = !sessionData[user?.id || '']?.isPresent && participients.length < sessionLimit
-  const canLeave = !Object.keys(sessionData).includes(user?.id ?? '') || sessionData[user?.id || ''].isPresent
+  const hasntResponded = !Object.keys(sessionData).includes(user?.id ?? '')
+  const isPresent = sessionData[user?.id || '']?.isPresent ?? false
   const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
 
-  const myStatus = sessionData[user?.id || '']?.isPresent ? <span className="badge bg-success">aanwezig</span> : (sessionData[user?.id || '']?.isPresent === false) ? <span className="badge bg-warning">afwezig</span> : <span className="badge bg-secondary">nog reageren</span>
+  const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      joinSession(user?.id ?? '')
+    }
+    else {
+      leaveSession(user?.id ?? '')
+    }
+  }
 
   return (
     <div className={styles.container}>
@@ -34,24 +45,31 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <Link href="/">
-          <button className='btn btn-outline-secondary'>Terug naar overzicht</button>
-        </Link>
+        {
+          nextSession && (<Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
+            <button className='btn btn-outline-secondary'>Volgende sessie</button>
+          </Link>)
+        }
         <h3 className='mt-4 mb-4'>
           Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')}
         </h3>
 
         <div className={styles.participientRow}>
           <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
-          <div className={styles.participientInfo}>
-            <span>mijn status: {myStatus}</span>
+          <div className={`d-flex align-items-center fs-5 ${styles.participientInfo}`}>
+            <label className="form-check-label" htmlFor="my-status" style={{ cursor: 'pointer' }}>deelname:</label>
+            <div className="form-check form-switch ms-2 fs-4">
+              <input className="form-check-input" type="checkbox" id="my-status" checked={isPresent} onChange={onChangeStatus} style={{ cursor: 'pointer' }} />
+            </div>
           </div>
         </div>
 
-        <div className={styles.sessionButtons}>
-          <button className="btn btn-success" onClick={() => joinSession(user?.id ?? '')} disabled={!canJoin}>Deelnemen</button>
-          <button className="btn btn-outline-warning" onClick={() => leaveSession(user?.id ?? '')} disabled={!canLeave}>Afmelden</button>
-        </div>
+        {
+          !isPresent && hasntResponded && (
+          <div className={styles.sessionButtons}>
+            <button className="btn btn-outline-warning" onClick={() => leaveSession(user?.id ?? '')}>Afmelden</button>
+          </div>)
+        }
 
         <div style={{ marginTop: '1em' }}>
           <p className='text-center fw-bold'>Aanwezig ({participients.filter(p => p[1].isPresent).length}/{sessionLimit})</p>
@@ -87,12 +105,8 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
-
-      {/* <footer className={styles.footer}>
-
-      </footer> */}
     </div>
   )
 }
 
-export default Home
+export default SessionPage

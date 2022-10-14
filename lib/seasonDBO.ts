@@ -81,7 +81,13 @@ const useSessions = (seasonKey: string) => {
         })
     }, [seasonKey])
 
-    return { sessions }
+    const getNextSession = (sessionDate: number): string => {
+        return Object.keys(sessions)
+            .filter(s => parseInt(s) > sessionDate)
+            .sort((d1, d2) => parseInt(d1) - parseInt(d2))[0]
+    }
+
+    return { sessions, getNextSession }
 }
 
 const useSessionData = (season: string, date: string) => {
