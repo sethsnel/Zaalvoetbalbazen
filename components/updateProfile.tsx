@@ -16,6 +16,7 @@ type UpdateProfileProps = {
 const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
   const { profile, upsertProfile, uploadFile } = useProfileManagement(activeSeason, user.id)
   const [profileSaved, setProfileSaved] = useState<boolean>(false)
+  const [profileError, setProfileError] = useState<boolean>(false)
 
   const nameInputRef = useRef<null | HTMLInputElement>(null)
   const emailInputRef = useRef<null | HTMLInputElement>(null)
@@ -36,12 +37,19 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
   }
 
   const submitProfile = () => {
-    upsertProfile(user.id, {
-      name: nameInputRef?.current?.value || '',
-      email: emailInputRef?.current?.value || '',
-      profilePic: fileUrl ?? myProfile.profilePic
-    })
-    setProfileSaved(true)
+    if (nameInputRef?.current?.value) {
+      upsertProfile(user.id, {
+        name: nameInputRef?.current?.value || '',
+        email: emailInputRef?.current?.value || '',
+        profilePic: fileUrl ?? myProfile.profilePic
+      })
+      setProfileSaved(true)
+      setProfileError(false)
+    }
+    else {
+      setProfileSaved(false)
+      setProfileError(true)
+    }
   }
 
   return (
@@ -75,6 +83,10 @@ const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
 
         {profileSaved && <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
           Profiel bijgewerkt,&nbsp;<Link href="/"><a style={{textDecoration: 'underline'}}>ga naar home</a></Link>
+        </div>}
+
+        {profileError && <div className="alert alert-danger d-flex align-items-center mt-5" role="alert">
+          Profiel niet opgeslagen, geef minimaal een naam op. Bij voorkeur ook een profielfoto.
         </div>}
       </main>
     </div>

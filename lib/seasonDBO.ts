@@ -156,8 +156,7 @@ const useMyProfile = (season: string, userId: string) => {
                     setProfile(profile)
                     setIsLoading(false)
                 }
-    
-            }, { onlyOnce: true })
+            })
         }
     }, [season, userId])
 

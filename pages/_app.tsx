@@ -36,7 +36,7 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
       (isLoading || isLoadingProfile) ?
         <PageLoader fullscreen={true} /> :
         (user) ?
-          (profile) ?
+          (profile && profile.name) ?
             <>
               <Navbar isAdmin={isAdmin(user.id)} logout={logout} />
               <Component {...pageProps} />

@@ -27,6 +27,8 @@ const SessionPage: NextPage = () => {
   const sessionLimit = appSettings?.sessionLimit || 0
   const hasntResponded = !Object.keys(sessionData).includes(user?.id ?? '')
   const isPresent = sessionData[user?.id || '']?.isPresent ?? false
+  const amountJoined = participients.filter(p => p[1].isPresent).length
+  const canJoin = isPresent || amountJoined < sessionLimit
   const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
 
   const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +61,7 @@ const SessionPage: NextPage = () => {
           <div className={`d-flex align-items-center fs-5 ${styles.participientInfo}`}>
             <label className="form-check-label" htmlFor="my-status" style={{ cursor: 'pointer' }}>deelname:</label>
             <div className="form-check form-switch ms-2 fs-4">
-              <input className="form-check-input" type="checkbox" id="my-status" checked={isPresent} onChange={onChangeStatus} style={{ cursor: 'pointer' }} />
+              <input className="form-check-input" type="checkbox" id="my-status" checked={isPresent} onChange={onChangeStatus} style={{ cursor: 'pointer' }} disabled={!canJoin} />
             </div>
           </div>
         </div>
@@ -72,7 +74,7 @@ const SessionPage: NextPage = () => {
         }
 
         <div style={{ marginTop: '1em' }}>
-          <p className='text-center fw-bold'>Aanwezig ({participients.filter(p => p[1].isPresent).length}/{sessionLimit})</p>
+          <p className='text-center fw-bold'>Aanwezig ({amountJoined}/{sessionLimit})</p>
           <div className={styles.participients}>
             {
               //@ts-ignore
