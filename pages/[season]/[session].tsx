@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChangeEvent } from 'react'
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai'
 
 import { useProfiles, useSessionData, useSessions } from '../../lib/seasonDBO'
 import { useAppSettings } from '../../lib/appSettingsDBO'
@@ -47,34 +48,52 @@ const SessionPage: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        {
-          nextSession && (<Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
-            <button className='btn btn-outline-secondary'>Volgende sessie</button>
-          </Link>)
-        }
-        <h3 className='mt-4 mb-4'>
+        <Link href={`/`}>
+          <a className='btn btn-outline-secondary align-self-start d-flex align-items-center gap-1'>
+            <AiOutlineArrowLeft /> Overzicht
+          </a>
+        </Link>
+
+        <h3 className='mt-4 mb-4 d-flex align-items-center fw-bold fs-4'>
+          <Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
+            <a className='btn btn-link me-3'>
+              <AiOutlineArrowLeft />
+            </a>
+          </Link>
           Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')}
+          <Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
+            <a className='btn btn-link me-3'>
+              <AiOutlineArrowRight />
+            </a>
+          </Link>
         </h3>
 
         <div className={styles.participientRow}>
           <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
-          <div className={`d-flex align-items-center fs-5 ${styles.participientInfo}`}>
+          {/* <div className={`d-flex align-items-center fs-5 ${styles.participientInfo}`}>
             <label className="form-check-label" htmlFor="my-status" style={{ cursor: 'pointer' }}>deelname:</label>
             <div className="form-check form-switch ms-2 fs-4">
               <input className="form-check-input" type="checkbox" id="my-status" checked={isPresent} onChange={onChangeStatus} style={{ cursor: 'pointer' }} disabled={!canJoin} />
             </div>
+          </div> */}
+          <div className="btn-group flex-grow-1 ms-4" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={isPresent} />
+            <label className="btn btn-outline-primary" htmlFor="btnradio1">Aanwezig</label>
+
+            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={!isPresent && !hasntResponded} />
+            <label className="btn btn-outline-primary" htmlFor="btnradio2">Afwezig</label>
           </div>
         </div>
 
-        {
+        {/* {
           !isPresent && hasntResponded && (
           <div className={styles.sessionButtons}>
             <button className="btn btn-outline-warning" onClick={() => leaveSession(user?.id ?? '')}>Afmelden</button>
           </div>)
-        }
+        } */}
 
-        <div style={{ marginTop: '1em' }}>
-          <p className='text-center fw-bold'>Aanwezig ({amountJoined}/{sessionLimit})</p>
+        <div style={{ marginTop: '1em', width: '100%' }}>
+          <p className='fw-bold'>Aanwezig ({amountJoined}/{sessionLimit})</p>
           <div className={styles.participients}>
             {
               //@ts-ignore
@@ -83,15 +102,15 @@ const SessionPage: NextPage = () => {
                   <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
-                    <span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
+                    <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small>
                   </div>
                 </div>)
             }
           </div>
         </div>
 
-        <div style={{ marginTop: '1em' }}>
-          <p className='text-center fw-bold'>Afwezig ({participients.filter(p => !p[1].isPresent).length})</p>
+        <div style={{ marginTop: '1em', width: '100%' }}>
+          <p className='fw-bold'>Afwezig ({participients.filter(p => !p[1].isPresent).length})</p>
           <div className={styles.participients}>
             {
               //@ts-ignore
@@ -100,7 +119,7 @@ const SessionPage: NextPage = () => {
                   <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
-                    <span>({dayjs.unix(participient.responded_at).format('D MMMM')})</span>
+                    <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small>
                   </div>
                 </div>)
             }

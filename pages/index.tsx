@@ -18,9 +18,9 @@ const Home: NextPage = () => {
   const later = Object.values(seasonDates || {}).filter(date => date > dayjs().add(4, 'weeks').unix())
 
   const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
-    if (!session || !session[user?.id || '']) return <span className="badge bg-secondary">reageren</span>
+    if (!session || !session[user?.id || '']) return <span className="badge bg-primary">reageren</span>
     if (session[user?.id || '']?.isPresent) return <span className="badge bg-success">aanwezig</span>
-    return <span className="badge bg-warning">afwezig</span>
+    return <span className="badge bg-secondary">afwezig</span>
   }
 
   return (
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
         </h1>
 
         <div className={styles.sessions}>
-        <p className='fw-bold'>Eerstvolgende:</p>
+        <p className='fw-bold w-100 mb-1'>Eerstvolgende</p>
           <div className={styles.sessionContainer}>
             <SessionLinkComponent
               href={`/${appSettings?.activeSeason}/${upcommingDate}`}
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.sessions}>
-          <p className='fw-bold'>Komende weken:</p>
+          <p className='fw-bold w-100 mb-1'>Komende weken</p>
           {
             commingWeeks.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.sessions}>
-          <p className='fw-bold'>Toekomst:</p>
+          <p className='fw-bold w-100 mb-1'>Toekomst</p>
           {
             later.map((date, index) =>
               <div key={index} className={styles.sessionContainer}>

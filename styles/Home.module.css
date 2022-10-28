@@ -4,11 +4,10 @@
 
 .main {
   min-height: calc(100vh - 65px);
-  padding: 4rem 0;
+  padding: 5rem 0 4rem 0;
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
@@ -71,7 +70,19 @@
   justify-content: center;
   flex-wrap: wrap;
   max-width: 800px;
+  width: 95%;
+
+  padding: 0.5em 1em;
   margin: 1em 0 0 0;
+  border-radius: 0.6em;
+  border: solid 1px #ededed;
+  box-shadow: 0px 3px 0.6rem rgba(0,0,0,0.05);
+
+  /* box-shadow:
+  0px 0px 1.9px rgba(0, 0, 0, 0.016),
+  0px 0px 6.5px rgba(0, 0, 0, 0.024),
+  0px 0px 29px rgba(0, 0, 0, 0.04)
+; */
 }
 
 .sessions a {
@@ -196,6 +207,21 @@
 
 .participientAdminRow .name {
   flex-grow: 1;
+}
+
+.navigationBottom {
+  width: 100%;
+  padding: 1rem;
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: space-around;
+  gap: 1em;
+}
+
+@media (orientation: landscape) {
+  .navigationBottom {
+    display: none;
+  }  
 }
 
 @media (max-width: 600px) {
