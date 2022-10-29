@@ -5,7 +5,8 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChangeEvent } from 'react'
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
+import { FcPrevious, FcNext } from 'react-icons/fc'
 
 import { useProfiles, useSessionData, useSessions } from '../../lib/seasonDBO'
 import { useAppSettings } from '../../lib/appSettingsDBO'
@@ -20,7 +21,8 @@ const SessionPage: NextPage = () => {
   const { appSettings } = useAppSettings()
   const { sessionData, joinSession, leaveSession } = useSessionData(router.query.season as string, router.query.session as string)
   const { profiles } = useProfiles(router.query.season as string)
-  const { getNextSession } = useSessions(appSettings?.activeSeason || '')
+  const { getPreviousSession, getNextSession } = useSessions(appSettings?.activeSeason || '')
+  const previousSession = getPreviousSession(parseInt(router.query.session as string))
   const nextSession = getNextSession(parseInt(router.query.session as string))
 
   const participients = Object.entries(sessionData).sort(function (a, b) { return a[1].responded_at - b[1].responded_at })
@@ -33,7 +35,7 @@ const SessionPage: NextPage = () => {
   const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
 
   const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
+    if (e.target.id === 'join') {
       joinSession(user?.id ?? '')
     }
     else {
@@ -54,18 +56,18 @@ const SessionPage: NextPage = () => {
           </a>
         </Link>
 
-        <h3 className='mt-4 mb-4 d-flex align-items-center fw-bold fs-4'>
-          <Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
-            <a className='btn btn-link me-3'>
-              <AiOutlineArrowLeft />
+        <h3 className='mt-4 mb-4 d-flex position-relative align-items-center fw-bold fs-4 w-100 justify-content-center'>
+          {previousSession && (<Link href={`/${appSettings?.activeSeason}/${previousSession}`}>
+            <a className='btn btn-link position-absolute start-0'>
+              <FcPrevious />
             </a>
-          </Link>
+          </Link>)}
           Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')}
-          <Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
-            <a className='btn btn-link me-3'>
-              <AiOutlineArrowRight />
+          {nextSession && (<Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
+            <a className='btn btn-link position-absolute end-0'>
+              <FcNext />
             </a>
-          </Link>
+          </Link>)}
         </h3>
 
         <div className={styles.participientRow}>
@@ -77,11 +79,11 @@ const SessionPage: NextPage = () => {
             </div>
           </div> */}
           <div className="btn-group flex-grow-1 ms-4" role="group" aria-label="Basic radio toggle button group">
-            <input type="radio" className="btn-check" name="btnradio" id="btnradio1" autoComplete="off" checked={isPresent} />
-            <label className="btn btn-outline-primary" htmlFor="btnradio1">Aanwezig</label>
+            <input type="radio" className="btn-check" name="btnradio" id="join" autoComplete="off" checked={isPresent} disabled={!canJoin} onChange={onChangeStatus} />
+            <label className="btn btn-outline-primary" htmlFor="join">Aanwezig</label>
 
-            <input type="radio" className="btn-check" name="btnradio" id="btnradio2" autoComplete="off" checked={!isPresent && !hasntResponded} />
-            <label className="btn btn-outline-primary" htmlFor="btnradio2">Afwezig</label>
+            <input type="radio" className="btn-check" name="btnradio" id="leave" autoComplete="off" checked={!isPresent && !hasntResponded} onChange={onChangeStatus} />
+            <label className="btn btn-outline-primary" htmlFor="leave">Afwezig</label>
           </div>
         </div>
 
@@ -92,7 +94,7 @@ const SessionPage: NextPage = () => {
           </div>)
         } */}
 
-        <div style={{ marginTop: '1em', width: '100%' }}>
+        <div className="mt-3 w-100">
           <p className='fw-bold'>Aanwezig ({amountJoined}/{sessionLimit})</p>
           <div className={styles.participients}>
             {
@@ -109,7 +111,7 @@ const SessionPage: NextPage = () => {
           </div>
         </div>
 
-        <div style={{ marginTop: '1em', width: '100%' }}>
+        <div className="mt-3 w-100">
           <p className='fw-bold'>Afwezig ({participients.filter(p => !p[1].isPresent).length})</p>
           <div className={styles.participients}>
             {

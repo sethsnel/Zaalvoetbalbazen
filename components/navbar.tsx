@@ -48,7 +48,7 @@ const Navbar = ({ logout, isAdmin }: { logout: () => void, isAdmin: boolean }) =
           }
         </ul>
       </div>
-      <button className="btn btn-outline-danger position-absolute end-0 top-0  me-3" onClick={logout} type="button">Uitloggen</button>
+      <button className="btn btn-outline-secondary position-absolute end-0 top-0  me-3" onClick={logout} type="button">Uitloggen</button>
     </div>
   </nav>
 }

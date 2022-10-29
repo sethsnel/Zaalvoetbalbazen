@@ -126,7 +126,7 @@
 
 .sessionContainer {
   position: relative;
-  min-width: 300px;
+  width: 100%;
 }
 
 .sessionContainer a {
@@ -225,6 +225,14 @@
 }
 
 @media (max-width: 600px) {
+  .main {
+    padding: 5rem 0 0 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
   .grid {
     width: 100%;
     flex-direction: column;
@@ -236,6 +244,12 @@
 
   .participientInfo {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 350px) {
+  .container {
+    padding: 0 0;
   }
 }
 

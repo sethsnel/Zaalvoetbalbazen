@@ -81,13 +81,19 @@ const useSessions = (seasonKey: string) => {
         })
     }, [seasonKey])
 
+    const getPreviousSession = (sessionDate: number): string => {
+      return Object.keys(sessions)
+          .filter(s => parseInt(s) < sessionDate && parseInt(s) > dayjs().add(-12, 'hours').unix())
+          .sort((d1, d2) => parseInt(d2) - parseInt(d1))[0]
+  }
+
     const getNextSession = (sessionDate: number): string => {
         return Object.keys(sessions)
             .filter(s => parseInt(s) > sessionDate)
             .sort((d1, d2) => parseInt(d1) - parseInt(d2))[0]
     }
 
-    return { sessions, getNextSession }
+    return { sessions, getPreviousSession, getNextSession }
 }
 
 const useSessionData = (season: string, date: string) => {
