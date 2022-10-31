@@ -27,21 +27,21 @@ const Navbar = ({ logout, isAdmin }: { logout: () => void, isAdmin: boolean }) =
       <div className="collapse navbar-collapse justify-content-center" id="navbar">
         <ul className="navbar-nav">
           <li className="nav-item">
-            <MenuItem name="Overzicht" href='/' currentPath={pathname} />
+            <MenuItem name="Overzicht" href='/' currentPath={pathname} onClick={() => setExpandedMenu(false)} />
           </li>
           <li className="nav-item">
-            <MenuItem name="Verleden" href='/verleden' currentPath={pathname} />
+            <MenuItem name="Verleden" href='/verleden' currentPath={pathname} onClick={() => setExpandedMenu(false)} />
           </li>
           <li className="nav-item">
-            <MenuItem name="Mijn profiel" href='/profiel' currentPath={pathname} />
+            <MenuItem name="Mijn profiel" href='/profiel' currentPath={pathname} onClick={() => setExpandedMenu(false)} />
           </li>
           {
             isAdmin && (
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Beheer</a>
                 <ul className="dropdown-menu">
-                  <li><DropdownItem name="Sessies" href='/sessie-management' currentPath={pathname} /></li>
-                  <li><DropdownItem name="Aanwezigheid" href='/aanwezigheid' currentPath={pathname} /></li>
+                  <li><DropdownItem name="Sessies" href='/sessie-management' currentPath={pathname} onClick={() => setExpandedMenu(false)} /></li>
+                  <li><DropdownItem name="Aanwezigheid" href='/aanwezigheid' currentPath={pathname} onClick={() => setExpandedMenu(false)} /></li>
                 </ul>
               </li>
             )
@@ -53,21 +53,21 @@ const Navbar = ({ logout, isAdmin }: { logout: () => void, isAdmin: boolean }) =
   </nav>
 }
 
-function MenuItem({ name, href, currentPath }: { name: string, href: string, currentPath: string }) {
+function MenuItem({ name, href, currentPath, onClick }: { name: string, href: string, currentPath: string, onClick: () => void }) {
   if (currentPath === href) {
-    return <Link href={href}><a className="nav-link active" aria-current="page">{name}</a></Link>
+    return <Link href={href}><a className="nav-link active" aria-current="page" onClick={onClick}>{name}</a></Link>
   }
   else {
-    return <Link href={href}><a className="nav-link" href={href}>{name}</a></Link>
+    return <Link href={href}><a className="nav-link" href={href} onClick={onClick}>{name}</a></Link>
   }
 }
 
-function DropdownItem({ name, href, currentPath }: { name: string, href: string, currentPath: string }) {
+function DropdownItem({ name, href, currentPath, onClick }: { name: string, href: string, currentPath: string, onClick: () => void }) {
   if (currentPath === href) {
-    return <Link href={href}><a className="dropdown-item active" aria-current="page">{name}</a></Link>
+    return <Link href={href}><a className="dropdown-item active" aria-current="page" onClick={onClick}>{name}</a></Link>
   }
   else {
-    return <Link href={href}><a className="dropdown-item" href={href}>{name}</a></Link>
+    return <Link href={href}><a className="dropdown-item" href={href} onClick={onClick}>{name}</a></Link>
   }
 }
 
