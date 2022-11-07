@@ -181,7 +181,7 @@ const useProfileManagement = (season: string, userId: string) => {
 
     function upsertProfile(userId: string, updatedProfile: Omit<Profile, 'joined'>) {
         if (profile) {
-            set(ref(db, `/seasons/${season}/profiles/${userId}`), { profile, ...updatedProfile })
+            set(ref(db, `/seasons/${season}/profiles/${userId}`), { ...profile, ...updatedProfile })
         }
         else {
             set(ref(db, `/seasons/${season}/profiles/${userId}`), profile)
