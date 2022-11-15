@@ -7,7 +7,7 @@ import { authInstance } from './firebaseConfig'
 import useLocalStorage from './useLocalStorage'
 
 const useUser = () => {
-  const [user, setUser] = useState<UserProfile | undefined>(undefined)
+  const [user, setUser] = useLocalStorage<UserProfile | undefined>('user', undefined)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const router = useRouter()
 
