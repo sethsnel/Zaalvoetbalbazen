@@ -162,6 +162,10 @@ const useMyProfile = (season: string, userId: string) => {
                     setProfile(profile)
                     setIsLoading(false)
                 }
+            }, (error) => {
+                if (error.message.includes('permission_denied')) {
+                    window.location.reload()
+                }
             })
         }
     }, [season, userId])
