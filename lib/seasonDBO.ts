@@ -5,37 +5,9 @@ import { useEffect, useState } from "react"
 
 import firebaseApp from "./firebaseConfig"
 import useLocalStorage from "./useLocalStorage"
+import { Notifications, Profile, Profiles, Session, Sessions, DeviceSubscription } from "./DBOTypes"
 
 const db = getDatabase(firebaseApp)
-
-type Season = {
-    title: string
-    dates: { [key: string]: number }
-    isFetched: boolean
-    sessions: Sessions
-    profiles: Profiles
-}
-
-type Sessions = {
-    [key: number]: Session
-}
-
-type Session = {
-    [key: string]: ParticipantData
-}
-
-type Profiles = {
-    [key: string]: Profile
-}
-
-type Profile = {
-    name?: string
-    email?: string
-    profilePic?: string
-    joined?: { [key: string]: boolean }
-}
-
-type ParticipantData = { responded_at: number, isPresent: boolean }
 
 const useSeasonDatesManagement = (seasonKey: string) => {
     const [seasonDates, setSeasonDates] = useLocalStorage<{ [key: string]: number }>(`seasonDatesMgt`)
@@ -198,4 +170,31 @@ const useProfileManagement = (season: string, userId: string) => {
     return { profile, upsertProfile, uploadFile }
 }
 
-export { db, useSeasonDates, useSeasonDatesManagement, useSessions, useSessionData, useProfiles, useMyProfile, useProfileManagement }
+const useNotificationManagement = (season: string, userId: string) => {
+    const [notifications, setNotifications] = useLocalStorage<Notifications>(`notifications`,{})
+
+    useEffect(() => {
+        if (!userId) return
+        return onValue(ref(db, `/seasons/${season}/notifications/${userId}`), (snapshot) => {
+            setNotifications(snapshot.val() || {})
+        })
+    }, [season, userId])
+
+    function upsertNotification(token: string) {
+        const newDeviceSubscription: DeviceSubscription = {
+            tokenId: token,
+            lastSuccesFullSendData: dayjs().unix(),
+            hasFailed: false
+        }
+
+        set(ref(db, `/seasons/${season}/notifications/${userId}`), { [token]: newDeviceSubscription, ...notifications })
+    }
+
+    function removeNotification(token: string) {
+        remove(ref(db, `/seasons/${season}/notifications/${userId}/${token}`))
+    }
+
+    return { notifications, upsertNotification, removeNotification }
+}
+
+export { db, useSeasonDates, useSeasonDatesManagement, useSessions, useSessionData, useProfiles, useMyProfile, useProfileManagement, useNotificationManagement }

@@ -35,6 +35,9 @@ const Navbar = ({ logout, isAdmin }: { logout: () => void, isAdmin: boolean }) =
           <li className="nav-item">
             <MenuItem name="Mijn profiel" href='/profiel' currentPath={pathname} onClick={() => setExpandedMenu(false)} />
           </li>
+          <li className="nav-item">
+            <MenuItem name="Voorkeuren" href='/voorkeuren' currentPath={pathname} onClick={() => setExpandedMenu(false)} />
+          </li>
           {
             isAdmin && (
               <li className="nav-item dropdown">
