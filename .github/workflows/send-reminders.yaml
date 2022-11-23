@@ -1,0 +1,12 @@
+name: send-reminders
+on:
+  schedule:
+    - cron: '0 1 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call send reminders API route
+        run: |
+          curl --request GET \
+          --url 'https://preview-voetbalbazen.sethpoint.nl/api/send-reminders' \
