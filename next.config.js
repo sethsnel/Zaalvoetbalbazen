@@ -7,4 +7,9 @@ const nextConfig = {
   },
 }
 
+// const withBundleAnalyzer = require("@next/bundle-analyzer")({
+//   enabled: true//process.env.ANALYZE === "false",
+// });
+
+//module.exports = withBundleAnalyzer(nextConfig)
 module.exports = nextConfig

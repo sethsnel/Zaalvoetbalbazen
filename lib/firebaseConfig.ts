@@ -1,12 +1,14 @@
 import { initializeApp } from 'firebase/app'
 // the below imports are option - comment out what you don't need
-import 'firebase/auth'
-import 'firebase/firestore'
+// import 'firebase/auth'
+// import 'firebase/firestore'
 // import 'firebase/storage'
-import 'firebase/analytics'
-import 'firebase/performance'
+//import 'firebase/analytics'
+//import 'firebase/performance'
 import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
+import { getMessaging, Messaging } from 'firebase/messaging'
+
 // import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
 const clientCredentials = {
@@ -21,7 +23,11 @@ const clientCredentials = {
 
 const firebaseApp = initializeApp(clientCredentials)
 
+export let messagingInstance: Messaging
 if (typeof window !== 'undefined') {
+    if ('serviceWorker' in navigator) {
+        messagingInstance = getMessaging(firebaseApp)
+    }
     // const analytics = getAnalytics(firebaseApp)
     // const performance = getPerformance(firebaseApp)
 
@@ -31,7 +37,8 @@ if (typeof window !== 'undefined') {
     // })
 }
 
-export const firestoreDb = getFirestore()
+export const firestoreDb = getFirestore(firebaseApp)
 export const authInstance = getAuth(firebaseApp)
+
 authInstance.languageCode = 'nl'
 export default firebaseApp

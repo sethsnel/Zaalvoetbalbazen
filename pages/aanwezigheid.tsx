@@ -48,7 +48,9 @@ const SessionManagement: NextPage = () => {
 }
 
 function countHistoricSessionsJoined(joined: { [key: string]: boolean } | undefined): number {
-  var sessions = Object.entries(joined ?? {}).filter(([date, joined]) => joined && parseInt(date) < dayjs().unix())
+  var sessions = Object.entries(joined ?? {}).filter(([date, joined]) => {
+    return joined && parseInt(date) < dayjs().unix()
+  })
   return sessions.length
 }
 
