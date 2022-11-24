@@ -1,4 +1,4 @@
-import { getToken } from "firebase/messaging";
+import { getToken, isSupported } from "firebase/messaging";
 
 import { messagingInstance } from "./firebaseConfig";
 import { useNotificationManagement } from "./seasonDBO";
@@ -9,7 +9,8 @@ const vapidKey = 'BKNAYYQvHbJ2LRseRkUSVQd-zEPt-K-gbJ8ZF4oMKlCWqvd29EZxScLs-ItiSr
 const useNotifications = (season: string, userId: string) => {
   const [isDeviceSubscribed, setIsDeviceSubscribed] = useLocalStorage<boolean>(`push-notification-registered`, false)
   const { upsertNotification, removeNotification } = useNotificationManagement(season, userId)
-  const canRegisterDevice = 'serviceWorker' in navigator
+  let canRegisterDevice = 'serviceWorker' in navigator
+  isSupported().then(deviceSupportsPush => canRegisterDevice &&= deviceSupportsPush )
 
   const subscribeDevice = () => {
     if (!isDeviceSubscribed) {
