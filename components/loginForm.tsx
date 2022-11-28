@@ -106,7 +106,7 @@ const LoginForm = () => {
                   <span className="input-group-text" id="email">Email</span>
                   <input ref={emailInputRef} type="email" className="form-control" placeholder="jouw@email.com" aria-label="email" aria-describedby="email" defaultValue={window.localStorage.getItem('emailForSignIn') ?? ''} />
                 </div>
-                <button className="btn btn-outline-success" onClick={loginWithCustomAccount}>Mail inlog link</button>
+                <button className="btn btn-primary" onClick={loginWithCustomAccount}>Mail inlog link</button>
               </div>)
         }
       </main>
