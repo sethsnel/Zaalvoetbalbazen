@@ -2,6 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { MdOutlineEventAvailable, MdOutlineEventBusy } from 'react-icons/md'
+import { RiQuestionMark } from 'react-icons/ri'
 
 import { useSeasonDates, useSessions } from '../lib/seasonDBO'
 import { useAppSettings } from '../lib/appSettingsDBO'
@@ -18,9 +20,9 @@ const Home: NextPage = () => {
   const later = Object.values(seasonDates || {}).filter(date => date > dayjs().add(4, 'weeks').unix())
 
   const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
-    if (!session || !session[user?.id || '']) return <span className="badge bg-primary">reageren</span>
-    if (session[user?.id || '']?.isPresent) return <span className="badge bg-success">aanwezig</span>
-    return <span className="badge bg-secondary">afwezig</span>
+    if (!session || !session[user?.id || '']) return <span className="text-primary fs-5 d-flex"><RiQuestionMark /></span>
+    if (session[user?.id || '']?.isPresent) return <span className="text-success fs-5 d-flex"><MdOutlineEventAvailable /></span>
+    return <span className="text-danger fs-5 d-flex"><MdOutlineEventBusy /></span>
   }
 
   return (
@@ -43,6 +45,7 @@ const Home: NextPage = () => {
               date={upcommingDate}
               sessions={sessions}
               limit={appSettings?.sessionLimit}
+              presentIndicator={true}
               badge={getMyBadge(sessions[upcommingDate])}  />
           </div>
         </div>
@@ -81,11 +84,23 @@ const Home: NextPage = () => {
   )
 }
 
-const SessionLinkComponent = ({ href, date, sessions, limit, badge }: { href: string, date: number, sessions: any, limit?: number, badge: JSX.Element}) => {
+const SessionLinkComponent = ({ href, date, sessions, limit, presentIndicator, badge }: { href: string, date: number, sessions: any, limit?: number, presentIndicator?: boolean, badge: JSX.Element}) => {
+  const peoplePresent = Object.values(sessions[date] || {}).filter((s: any) => s.isPresent).length
+  let presentBadgeBg = 'bg-light text-dark'
+  if (presentIndicator) {
+    if (peoplePresent < 6) {
+      presentBadgeBg = 'bg-danger'
+    } else if (peoplePresent < 10) {
+      presentBadgeBg = 'bg-warning'
+    } else {
+      presentBadgeBg = 'bg-success'
+    }
+  }
+
   return <Link href={href}>
     <a>
       {dayjs.unix(date).format('D MMMM')}
-      &nbsp;<span className="badge bg-light text-dark ms-2">{Object.values(sessions[date] || {}).filter((s: any) => s.isPresent).length}/{limit}</span>
+      &nbsp;<span className={`badge ms-2 ${presentBadgeBg}`}>{peoplePresent}/{limit}</span>
       &nbsp;{badge}
     </a>
   </Link>
