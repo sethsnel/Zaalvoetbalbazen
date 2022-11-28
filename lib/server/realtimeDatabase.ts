@@ -30,7 +30,7 @@ export const getActiveSeason = async () => {
   return await getValueAsync<string>(activeSeasonRef)
 }
 
-export const getNotifictions = async (activeSeason: string) => {
+export const getNotifications = async (activeSeason: string) => {
   var notificationsRef = databaseServer.ref(`seasons/${activeSeason}/notifications`)
   return await getValueAsync<Notifications>(notificationsRef)
 }

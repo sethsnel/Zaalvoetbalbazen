@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { getActiveSeason, getDates, getNotifictions } from '../../lib/server/realtimeDatabase'
+import { getActiveSeason, getDates, getNotifications } from '../../lib/server/realtimeDatabase'
 
 type Data = {
   name: string
@@ -14,7 +14,7 @@ export default async function handler(
 ) {
   const activeSeason = await getActiveSeason()
   const upcommingDatesPromise = getDates(activeSeason, dayjs().add(2, 'day').unix(), dayjs().add(3, 'day').unix())
-  const notificationsPromise = getNotifictions(activeSeason)
+  const notificationsPromise = getNotifications(activeSeason)
 
   const [upcommingDates, notifications] = await Promise.all([upcommingDatesPromise, notificationsPromise])
 
