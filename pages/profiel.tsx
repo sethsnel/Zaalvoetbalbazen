@@ -9,7 +9,7 @@ import styles from '../styles/Home.module.css'
 
 const Profiel: NextPage = () => {
     const { user } = useUser()
-    const { appSettings } = useAppSettings()
+    const { appSettings } = useAppSettings('')
 
     return (
         <div className={styles.container}>

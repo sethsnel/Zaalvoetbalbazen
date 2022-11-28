@@ -18,7 +18,7 @@ const SessionPage: NextPage = () => {
   const router = useRouter()
   const { user } = useUser()
 
-  const { appSettings } = useAppSettings()
+  const { appSettings } = useAppSettings(user?.id || '')
   const { sessionData, joinSession, leaveSession } = useSessionData(router.query.season as string, router.query.session as string)
   const { profiles } = useProfiles(router.query.season as string)
   const { getPreviousSession, getNextSession } = useSessions(appSettings?.activeSeason || '')

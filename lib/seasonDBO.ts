@@ -54,10 +54,10 @@ const useSessions = (seasonKey: string) => {
     }, [seasonKey])
 
     const getPreviousSession = (sessionDate: number): string => {
-      return Object.keys(sessions)
-          .filter(s => parseInt(s) < sessionDate && parseInt(s) > dayjs().add(-12, 'hours').unix())
-          .sort((d1, d2) => parseInt(d2) - parseInt(d1))[0]
-  }
+        return Object.keys(sessions)
+            .filter(s => parseInt(s) < sessionDate && parseInt(s) > dayjs().add(-12, 'hours').unix())
+            .sort((d1, d2) => parseInt(d2) - parseInt(d1))[0]
+    }
 
     const getNextSession = (sessionDate: number): string => {
         return Object.keys(sessions)
@@ -69,7 +69,7 @@ const useSessions = (seasonKey: string) => {
 }
 
 const useSessionData = (season: string, date: string) => {
-    const [sessionData, setSessionData] = useLocalStorage<Session>(`session-${date}`,{})
+    const [sessionData, setSessionData] = useLocalStorage<Session>(`session-${date}`, {})
 
     useEffect(() => {
         if (!date) return
@@ -111,7 +111,6 @@ const useProfiles = (season: string) => {
                 setProfiles(profiles)
                 setIsLoading(false)
             }
-
         }, { onlyOnce: true })
     }, [season])
 
@@ -135,6 +134,9 @@ const useMyProfile = (season: string, userId: string) => {
                 if (error.message.includes('permission_denied')) {
                     window.location.reload()
                 }
+                else {
+                    setIsLoading(false)
+                }
             })
         }
     }, [season, userId])
@@ -143,7 +145,7 @@ const useMyProfile = (season: string, userId: string) => {
 }
 
 const useProfileManagement = (season: string, userId: string) => {
-    const [profile, setProfile] = useLocalStorage<Profile>(`profileMgt`,{})
+    const [profile, setProfile] = useLocalStorage<Profile>(`profileMgt`, {})
 
     useEffect(() => {
         if (!userId) return
@@ -172,7 +174,7 @@ const useProfileManagement = (season: string, userId: string) => {
 }
 
 const useNotificationManagement = (season: string, userId: string) => {
-    const [notifications, setNotifications] = useLocalStorage<Notifications>(`notifications`,{})
+    const [notifications, setNotifications] = useLocalStorage<Notifications>(`notifications`, {})
 
     useEffect(() => {
         if (!userId) return

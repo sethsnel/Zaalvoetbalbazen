@@ -8,7 +8,6 @@ import useLocalStorage from './useLocalStorage'
 
 const useUser = () => {
   const [user, setUser] = useLocalStorage<UserProfile | undefined>('user', undefined)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
   const router = useRouter()
 
   const logout = async () => {
@@ -23,7 +22,6 @@ const useUser = () => {
   }
 
   useEffect(() => {
-    if (user !== undefined) setIsLoading(false)
     // Firebase updates the id token every hour, this
     // makes sure the react state and the cookie are
     // both kept up to date
@@ -36,7 +34,6 @@ const useUser = () => {
         //removeUserCookie()
         setUser(undefined)
       }
-      setIsLoading(false)
     })
 
     // const userFromCookie = getUserFromCookie()
@@ -51,7 +48,7 @@ const useUser = () => {
     }
   }, [])
 
-  return { user, logout, isLoading }
+  return { user, logout }
 }
 
 export { useUser }
