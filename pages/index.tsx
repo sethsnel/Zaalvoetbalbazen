@@ -11,7 +11,7 @@ import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
   const { user } = useUser()
-  const { appSettings } = useAppSettings()
+  const { appSettings } = useAppSettings('')
   const { seasonDates } = useSeasonDates(appSettings?.activeSeason || '')
   const { sessions } = useSessions(appSettings?.activeSeason || '')
   const [upcommingDate, ...commingWeeks] = Object.values(seasonDates || {}).filter(date => date > dayjs().add(-12, 'hours').unix() && date < dayjs().add(4, 'weeks').unix())
