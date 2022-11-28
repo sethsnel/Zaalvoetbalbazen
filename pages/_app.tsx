@@ -21,8 +21,8 @@ const Navbar = dynamic(() => import('../components/navbar').then((mod) => mod.de
 dayjs.locale('nl')
 
 function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
-  const { user, isLoading, logout } = useUser()
-  const { appSettings, isAdmin } = useAppSettings()
+  const { user, logout } = useUser()
+  const { appSettings, isAdmin, isLoading } = useAppSettings(user?.id || '')
   const activeSeason = appSettings?.activeSeason || ''
   const { profile, isLoading: isLoadingProfile } = useMyProfile(activeSeason, user?.id || '')
 
@@ -33,15 +33,17 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
       <link rel="icon" href="/favicon.ico" />
     </Head>
     {
-      (isLoading || isLoadingProfile) ?
+      (isLoading) ?
         <PageLoader fullscreen={true} /> :
         (user) ?
-          (profile && profile.name) ?
-            <>
-              <Navbar isAdmin={isAdmin(user.id)} logout={logout} />
-              <Component {...pageProps} />
-            </>
-            : <UpdateProfile user={user} activeSeason={activeSeason} />
+          (isLoadingProfile) ?
+            <PageLoader fullscreen={true} /> :
+            (profile && profile.name) ?
+              <>
+                <Navbar isAdmin={isAdmin()} logout={logout} />
+                <Component {...pageProps} />
+              </>
+              : <UpdateProfile user={user} activeSeason={activeSeason} />
           : <LoginForm />
     }
   </>

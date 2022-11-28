@@ -1,4 +1,4 @@
-import { getToken } from "firebase/messaging";
+import { getToken, isSupported } from "firebase/messaging";
 
 import { messagingInstance } from "./firebaseConfig";
 import { useNotificationManagement } from "./seasonDBO";
@@ -9,7 +9,8 @@ const vapidKey = 'BKNAYYQvHbJ2LRseRkUSVQd-zEPt-K-gbJ8ZF4oMKlCWqvd29EZxScLs-ItiSr
 const useNotifications = (season: string, userId: string) => {
   const [isDeviceSubscribed, setIsDeviceSubscribed] = useLocalStorage<boolean>(`push-notification-registered`, false)
   const { upsertNotification, removeNotification } = useNotificationManagement(season, userId)
-  const canRegisterDevice = 'serviceWorker' in navigator
+  let canRegisterDevice = 'serviceWorker' in navigator
+  isSupported().then(deviceSupportsPush => canRegisterDevice &&= deviceSupportsPush )
 
   const subscribeDevice = () => {
     if (!isDeviceSubscribed) {
@@ -17,8 +18,6 @@ const useNotifications = (season: string, userId: string) => {
         if (currentToken) {
           // Send the token to your server and update the UI if necessary
           // ...
-          console.info('we have a token')
-          console.info(currentToken)
           upsertNotification(currentToken)
           setIsDeviceSubscribed(true)
         } else {
@@ -39,8 +38,6 @@ const useNotifications = (season: string, userId: string) => {
         if (currentToken) {
           // Send the token to your server and update the UI if necessary
           // ...
-          console.info('we have a token')
-          console.info(currentToken)
           upsertNotification(currentToken)
         } else {
           // Show permission request UI

@@ -9,7 +9,7 @@ import styles from '../styles/Home.module.css'
 
 const Voorkeuren: NextPage = () => {
     const { user } = useUser()
-    const { appSettings } = useAppSettings()
+    const { appSettings } = useAppSettings('')
     const { isDeviceSubscribed, canRegisterDevice, subscribeDevice, unSubscribeDevice } = useNotifications(appSettings.activeSeason, user?.id || '')
 
     const onToggleNotifications = (e: ChangeEvent<HTMLInputElement>) => {

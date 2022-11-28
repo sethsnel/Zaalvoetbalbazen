@@ -9,7 +9,7 @@ import styles from '../styles/Home.module.css'
 import dayjs from 'dayjs'
 
 const SessionManagement: NextPage = () => {
-  const { appSettings } = useAppSettings()
+  const { appSettings } = useAppSettings('')
   const activeSeason = appSettings?.activeSeason || ''
   const { profiles } = useProfiles(activeSeason)
 

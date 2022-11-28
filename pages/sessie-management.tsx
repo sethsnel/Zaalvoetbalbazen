@@ -10,7 +10,7 @@ import styles from '../styles/Home.module.css'
 
 const SessionManagement: NextPage = () => {
   const datePickerRef = useRef<HTMLInputElement | null>(null)
-  const { appSettings } = useAppSettings()
+  const { appSettings } = useAppSettings('')
   const activeSeason = appSettings?.activeSeason || ''
   const { seasonDates, addSessionDate, removeSessionDate } = useSeasonDatesManagement(activeSeason)
   const filteredDates = Object.values(seasonDates || {}).filter(date => date > dayjs().unix())
