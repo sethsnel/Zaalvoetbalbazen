@@ -124,16 +124,13 @@ const useMyProfile = (season: string, userId: string) => {
     const [isLoading, setIsLoading] = useState<boolean>(profile === initialValue)
 
     useEffect(() => {
-        if (!userId) {
-            setIsLoading(false)
-        }
-        else {
+        if (season && userId) {
             return onValue(ref(db, `/seasons/${season}/profiles/${userId}`), (snapshot) => {
                 const profile = snapshot.val()
                 if (profile !== null) {
                     setProfile(profile)
-                    setIsLoading(false)
                 }
+                setIsLoading(false)
             }, (error) => {
                 if (error.message.includes('permission_denied')) {
                     window.location.reload()
@@ -157,7 +154,7 @@ const useProfileManagement = (season: string, userId: string) => {
 
     function upsertProfile(userId: string, updatedProfile: Omit<Profile, 'joined'>) {
         if (profile) {
-            set(ref(db, `/seasons/${season}/profiles/${userId}`), { profile, ...updatedProfile })
+            set(ref(db, `/seasons/${season}/profiles/${userId}`), { ...profile, ...updatedProfile })
         }
         else {
             set(ref(db, `/seasons/${season}/profiles/${userId}`), profile)
