@@ -41,7 +41,19 @@ const useSeasonDates = (seasonKey: string) => {
         }, { onlyOnce: true })
     }, [seasonKey])
 
-    return { seasonDates }
+    const getPreviousDate = (sessionDate: number): number => {
+        return Object.values(seasonDates)
+            .filter(s => s < sessionDate && s > dayjs().add(-12, 'hours').unix())
+            .sort((d1, d2) => d2 - d1)[0]
+    }
+
+    const getNextDate = (sessionDate: number): number => {
+        return Object.values(seasonDates)
+            .filter(s => s > sessionDate)
+            .sort((d1, d2) => d1 - d2)[0]
+    }
+
+    return { seasonDates, getPreviousDate, getNextDate }
 }
 
 const useSessions = (seasonKey: string) => {
@@ -53,19 +65,7 @@ const useSessions = (seasonKey: string) => {
         })
     }, [seasonKey])
 
-    const getPreviousSession = (sessionDate: number): string => {
-        return Object.keys(sessions)
-            .filter(s => parseInt(s) < sessionDate && parseInt(s) > dayjs().add(-12, 'hours').unix())
-            .sort((d1, d2) => parseInt(d2) - parseInt(d1))[0]
-    }
-
-    const getNextSession = (sessionDate: number): string => {
-        return Object.keys(sessions)
-            .filter(s => parseInt(s) > sessionDate)
-            .sort((d1, d2) => parseInt(d1) - parseInt(d2))[0]
-    }
-
-    return { sessions, getPreviousSession, getNextSession }
+    return { sessions }
 }
 
 const useSessionData = (season: string, date: string) => {

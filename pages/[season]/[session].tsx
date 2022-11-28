@@ -8,7 +8,7 @@ import { ChangeEvent } from 'react'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { FcPrevious, FcNext } from 'react-icons/fc'
 
-import { useProfiles, useSessionData, useSessions } from '../../lib/seasonDBO'
+import { useProfiles, useSeasonDates, useSessionData } from '../../lib/seasonDBO'
 import { useAppSettings } from '../../lib/appSettingsDBO'
 import { useUser } from '../../lib/useUser'
 
@@ -21,9 +21,9 @@ const SessionPage: NextPage = () => {
   const { appSettings } = useAppSettings(user?.id || '')
   const { sessionData, joinSession, leaveSession } = useSessionData(router.query.season as string, router.query.session as string)
   const { profiles } = useProfiles(router.query.season as string)
-  const { getPreviousSession, getNextSession } = useSessions(appSettings?.activeSeason || '')
-  const previousSession = getPreviousSession(parseInt(router.query.session as string))
-  const nextSession = getNextSession(parseInt(router.query.session as string))
+  const { getPreviousDate, getNextDate } = useSeasonDates(appSettings?.activeSeason || '')
+  const previousSession = getPreviousDate(parseInt(router.query.session as string))
+  const nextSession = getNextDate(parseInt(router.query.session as string))
 
   const participients = Object.entries(sessionData).sort(function (a, b) { return a[1].responded_at - b[1].responded_at })
 
