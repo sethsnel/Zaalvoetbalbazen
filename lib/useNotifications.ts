@@ -18,8 +18,6 @@ const useNotifications = (season: string, userId: string) => {
         if (currentToken) {
           // Send the token to your server and update the UI if necessary
           // ...
-          console.info('we have a token')
-          console.info(currentToken)
           upsertNotification(currentToken)
           setIsDeviceSubscribed(true)
         } else {
@@ -40,8 +38,6 @@ const useNotifications = (season: string, userId: string) => {
         if (currentToken) {
           // Send the token to your server and update the UI if necessary
           // ...
-          console.info('we have a token')
-          console.info(currentToken)
           upsertNotification(currentToken)
         } else {
           // Show permission request UI
