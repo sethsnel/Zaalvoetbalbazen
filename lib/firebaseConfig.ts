@@ -1,11 +1,11 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, onLog, setLogLevel } from 'firebase/app'
 // the below imports are option - comment out what you don't need
 // import 'firebase/auth'
 // import 'firebase/firestore'
 // import 'firebase/storage'
 //import 'firebase/analytics'
 //import 'firebase/performance'
-import { getFirestore } from 'firebase/firestore'
+import { enableLogging, } from 'firebase/database'
 import { getAuth } from 'firebase/auth'
 import { getMessaging, Messaging } from 'firebase/messaging'
 
@@ -35,10 +35,15 @@ if (typeof window !== 'undefined') {
     //     provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_SITEKEY as string),
     //     isTokenAutoRefreshEnabled: true
     // })
+    window.onerror = function (message, file, line) {
+        console.log('An error occured at line ' + line + ' of ' + file + ': ' + message);
+    };
 }
 
-export const firestoreDb = getFirestore(firebaseApp)
 export const authInstance = getAuth(firebaseApp)
+
+//onLog((log) => { if (log.type === '@firebase/database' && log.message.includes('permission_denied')) {console.info('custom logger'); console.info(log)}})
+//enableLogging((log) => (log.includes('from server:') || log.includes('Listen')) ? console.info(log) : undefined)
 
 authInstance.languageCode = 'nl'
 export default firebaseApp

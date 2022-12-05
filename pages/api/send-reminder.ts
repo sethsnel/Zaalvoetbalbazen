@@ -15,7 +15,7 @@ export default async function handler(
   const message: MessagingPayload = {
     notification: {
       title: `Zaalvoetbal ${dayjs.unix(req.query.session as unknown as number).format('D MMMM')}`,
-      body: `Jouw status is: ${session[req.query.userId as string]?.isPresent ? 'aanwezig' : 'afwezig'}. Er zijn ${Object.keys(session).length} deelnemers. Klik om sessie te openen.`,
+      body: `Jouw status is: ${session && session[req.query.userId as string]?.isPresent ? 'aanwezig' : 'afwezig'}. Er zijn ${session ? Object.values(session).filter(s => s?.isPresent).length : 0} deelnemers. Klik om sessie te openen.`,
       clickAction: `${req.query.season}/${req.query.session}`
     }
   };

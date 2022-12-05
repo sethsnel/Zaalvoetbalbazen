@@ -1,5 +1,4 @@
 import { GoogleAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signInWithPopup } from 'firebase/auth'
-import Head from 'next/head'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BsGoogle } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
@@ -79,10 +78,6 @@ const LoginForm = () => {
 
   return (
     <div className={styles.container}>
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main className={styles.main}>
         <h3 style={{ marginTop: '1em' }}>
           Aanmelden

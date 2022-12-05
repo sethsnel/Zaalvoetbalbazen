@@ -17,9 +17,10 @@ export default async function handler(
   const notificationsPromise = getNotifications(activeSeason)
 
   const [upcommingDates, notifications] = await Promise.all([upcommingDatesPromise, notificationsPromise])
-
+  console.info(upcommingDates)
   const sendForUpcommingDates = upcommingDates.map(async date => {
     const sendToUsers = Object.entries(notifications).map(async ([userId, tokens]) => {
+      console.info(tokens)
       const sendToDevices = Object.entries(tokens).map(async ([token, obj]) => {
         //console.info(`${process.env.BACKEND_URL}/api/send-reminder?season=${activeSeason}&session=${date}&userId=${userId}&token=${token}`)
         var response = await fetch(`${process.env.BACKEND_URL}/api/send-reminder?season=${activeSeason}&session=${date}&userId=${userId}&token=${token}`)
