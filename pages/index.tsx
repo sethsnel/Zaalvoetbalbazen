@@ -22,7 +22,7 @@ const Home: NextPage = () => {
 
   const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
     if (!session || !session[user?.id || '']) {
-      return <div className="position-absolute end-0 top-50 translate-middle me-5 opacity-50">
+      return <div className="position-absolute end-0 top-50 translate-middle me-5 opacity-25">
       <Image src={profile?.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={30} width={30} className={styles.picture} objectFit='cover' />
       {/* <span className="text-primary fs-5 position-absolute top-0 start-100 translate-middle"><BsQuestionCircleFill /></span> */}
     </div>
