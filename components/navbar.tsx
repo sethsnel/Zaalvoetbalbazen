@@ -58,7 +58,9 @@ const Navbar = ({ logout, isAdmin, profileUrl }: { logout: () => void, isAdmin: 
         </ul>
       </div>
       <div className="position-absolute end-0 top-0 me-3">
-        <Image src={profileUrl} height={40} width={40} className={styles.picture} objectFit='cover' />
+        <Link href="/profiel">
+          <Image src={profileUrl} height={40} width={40} className={styles.picture} objectFit='cover' />
+        </Link>
       </div>
     </div>
   </nav>
