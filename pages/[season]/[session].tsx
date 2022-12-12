@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -45,10 +44,6 @@ const SessionPage: NextPage = () => {
 
   return (
     <div className={styles.container}>
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <main className={styles.main}>
         <Link href={`/`}>
           <a className='btn btn-outline-secondary align-self-start d-flex align-items-center gap-1'>
