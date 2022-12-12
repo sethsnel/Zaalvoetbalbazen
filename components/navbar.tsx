@@ -59,7 +59,7 @@ const Navbar = ({ logout, isAdmin, profileUrl }: { logout: () => void, isAdmin: 
       </div>
       <div className="position-absolute end-0 top-0 me-3">
         <Link href="/profiel">
-          <Image src={profileUrl} height={40} width={40} className={styles.picture} objectFit='cover' />
+          <Image src={profileUrl} height={40} width={40} className={`${styles.picture} cursor-pointer`} objectFit='cover' />
         </Link>
       </div>
     </div>
