@@ -26,6 +26,8 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
   const activeSeason = appSettings?.activeSeason || ''
   const { profile, isLoading: isLoadingProfile } = useMyProfile(activeSeason, user?.id || '')
 
+  const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
+
   return <>
     <Head>
       <title>Zaalvoetbalbazen</title>
@@ -40,7 +42,7 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
             <PageLoader fullscreen={true} /> :
             (profile && profile.name) ?
               <>
-                <Navbar isAdmin={isAdmin()} logout={logout} />
+                <Navbar isAdmin={isAdmin()} profileUrl={profile.profilePic || fallbackImg} logout={logout} />
                 <Component {...pageProps} />
               </>
               : <UpdateProfile user={user} activeSeason={activeSeason} />

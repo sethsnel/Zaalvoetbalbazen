@@ -1,9 +1,12 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { Collapse } from "bootstrap"
-import Link from "next/link"
+import Image from 'next/image'
+import Link from 'next/link'
 
-const Navbar = ({ logout, isAdmin }: { logout: () => void, isAdmin: boolean }) => {
+import styles from '../styles/Home.module.css'
+
+const Navbar = ({ logout, isAdmin, profileUrl }: { logout: () => void, isAdmin: boolean, profileUrl: string }) => {
   const { pathname } = useRouter()
   const [expandedMenu, setExpandedMenu] = useState(false)
 
@@ -49,9 +52,16 @@ const Navbar = ({ logout, isAdmin }: { logout: () => void, isAdmin: boolean }) =
               </li>
             )
           }
+          <li>
+          <button className="btn btn-outline-secondary" onClick={logout} type="button">Uitloggen</button>
+          </li>
         </ul>
       </div>
-      <button className="btn btn-outline-secondary position-absolute end-0 top-0  me-3" onClick={logout} type="button">Uitloggen</button>
+      <div className="position-absolute end-0 top-0 me-3">
+        <Link href="/profiel">
+          <Image src={profileUrl} height={40} width={40} className={`${styles.picture} cursor-pointer`} objectFit='cover' />
+        </Link>
+      </div>
     </div>
   </nav>
 }
