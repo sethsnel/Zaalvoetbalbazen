@@ -1,4 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import dayjs from 'dayjs'
 import { MessagingPayload } from 'firebase-admin/messaging'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -20,26 +19,23 @@ export default async function handler(
     }
   };
 
-  // Send a message to devices subscribed to the provided topic.
-  messagingServer.sendToDevice([req.query.token as string], message)
-    .then(async (response) => {
-      // Response is a message ID string.
-      console.log('Successfully sent message:', response);
-      await updateDeviceSubscription(req.query.season as string, req.query.userId as string, {
-        tokenId: req.query.token as string,
-        lastSuccesFullSendData: dayjs().unix(),
-        hasFailed: false
-      })
+  try {
+    const sendResponse = await messagingServer.sendToDevice([req.query.token as string], message)
+    console.log('Successfully sent message:', sendResponse);
+    await updateDeviceSubscription(req.query.season as string, req.query.userId as string, {
+      tokenId: req.query.token as string,
+      lastSuccesFullSendData: dayjs().unix(),
+      hasFailed: false
     })
-    .catch(async (error) => {
-      console.log('Error sending message:', error);
-      await updateDeviceSubscription(req.query.season as string, req.query.userId as string, {
-        tokenId: req.query.token as string,
-        lastSuccesFullSendData: dayjs().unix(),
-        hasFailed: true
-      })
-    });
+  }
+  catch (error) {
+    console.log('Error sending message:', error);
+    await updateDeviceSubscription(req.query.season as string, req.query.userId as string, {
+      tokenId: req.query.token as string,
+      lastSuccesFullSendData: dayjs().unix(),
+      hasFailed: true
+    })
+  }
 
   res.status(202).end()
 }
-

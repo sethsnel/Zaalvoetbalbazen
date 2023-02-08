@@ -9,4 +9,4 @@ jobs:
       - name: Call send reminders API route
         run: |
           curl --request GET \
-          --url 'https://preview-voetbalbazen.sethpoint.nl/api/send-reminders' \
+          --url 'https://zaalvoetbalbazen.nl/api/send-reminders' \
