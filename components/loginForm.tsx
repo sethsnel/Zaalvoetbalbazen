@@ -80,9 +80,9 @@ const LoginForm = () => {
     <div className={`${styles.container} ${styles.bg} ${styles.login}`}>
       <main className={styles.main}>
         <div className='mt-auto mb-auto'>
-          <h3 style={{ textAlign: 'center' }}>
+          <h1 style={{ textAlign: 'center' }}>
             Zaalvoetbal bazen
-          </h3>
+          </h1>
 
           {
             loggingInState.errorMessage && (<p>Er is een probleem: {loggingInState.errorMessage}</p>)
@@ -94,10 +94,10 @@ const LoginForm = () => {
               (loggingInState.linkSent) ?
                 <>Login link is verstuurd! Check je mail (ook spam folder).</> :
                 (!loginWithEmail) ? (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                  <button className={'btn btn-primary ' + styles.buttonWithIcon} onClick={loginWithGoogle}>Met gmail account<BsGoogle /></button>
-                  <button className={'btn btn-secondary ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}>Met e-mail<MdEmail /></button>
+                  <button className={'btn btn-primary shadow ' + styles.buttonWithIcon} onClick={loginWithGoogle}><BsGoogle /> Login met Google</button>
+                  <button className={'btn btn-secondary shadow ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}><MdEmail /> Login met e-mail</button>
                 </div>) : (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                  <button className="btn btn-outline-secondary" onClick={() => setLoginWithEmail(!loginWithEmail)}>Terug naar opties</button>
+                  <button className="btn btn-outline-secondary shadow" onClick={() => setLoginWithEmail(!loginWithEmail)}>Terug naar opties</button>
                   <div className="input-group">
                     <span className="input-group-text" id="email">Email</span>
                     <input ref={emailInputRef} type="email" className="form-control" placeholder="jouw@email.com" aria-label="email" aria-describedby="email" defaultValue={window.localStorage.getItem('emailForSignIn') ?? ''} />

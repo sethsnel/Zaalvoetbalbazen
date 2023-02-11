@@ -202,11 +202,8 @@
 .buttonWithIcon {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-}
-
-.buttonWithIcon svg {
-  margin-left: 1em;
+  justify-content: center;
+  gap:0.5rem;
 }
 
 .participientAdminRow {
