@@ -77,33 +77,35 @@ const LoginForm = () => {
   }, [loginWithCustomAccount])
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${styles.bg} ${styles.login}`}>
       <main className={styles.main}>
-        <h3 style={{ marginTop: '1em' }}>
-          Aanmelden
-        </h3>
+        <div className='mt-auto mb-auto'>
+          <h3 style={{ textAlign: 'center' }}>
+            Zaalvoetbal bazen
+          </h3>
 
-        {
-          loggingInState.errorMessage && (<p>Er is een probleem: {loggingInState.errorMessage}</p>)
-        }
+          {
+            loggingInState.errorMessage && (<p>Er is een probleem: {loggingInState.errorMessage}</p>)
+          }
 
-        {
-          (loggingInState.loggingIn) ?
-            <PageLoader /> :
-            (loggingInState.linkSent) ?
-              <>Login link is verstuurd! Check je mail (ook spam folder).</> :
-              (!loginWithEmail) ? (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                <button className={'btn btn-primary ' + styles.buttonWithIcon} onClick={loginWithGoogle}>Met gmail account<BsGoogle /></button>
-                <button className={'btn btn-secondary ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}>Met e-mail<MdEmail /></button>
-              </div>) : (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                <button className="btn btn-outline-secondary" onClick={() => setLoginWithEmail(!loginWithEmail)}>Terug naar opties</button>
-                <div className="input-group">
-                  <span className="input-group-text" id="email">Email</span>
-                  <input ref={emailInputRef} type="email" className="form-control" placeholder="jouw@email.com" aria-label="email" aria-describedby="email" defaultValue={window.localStorage.getItem('emailForSignIn') ?? ''} />
-                </div>
-                <button className="btn btn-primary" onClick={loginWithCustomAccount}>Mail inlog link</button>
-              </div>)
-        }
+          {
+            (loggingInState.loggingIn) ?
+              <PageLoader /> :
+              (loggingInState.linkSent) ?
+                <>Login link is verstuurd! Check je mail (ook spam folder).</> :
+                (!loginWithEmail) ? (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
+                  <button className={'btn btn-primary ' + styles.buttonWithIcon} onClick={loginWithGoogle}>Met gmail account<BsGoogle /></button>
+                  <button className={'btn btn-secondary ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}>Met e-mail<MdEmail /></button>
+                </div>) : (<div style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
+                  <button className="btn btn-outline-secondary" onClick={() => setLoginWithEmail(!loginWithEmail)}>Terug naar opties</button>
+                  <div className="input-group">
+                    <span className="input-group-text" id="email">Email</span>
+                    <input ref={emailInputRef} type="email" className="form-control" placeholder="jouw@email.com" aria-label="email" aria-describedby="email" defaultValue={window.localStorage.getItem('emailForSignIn') ?? ''} />
+                  </div>
+                  <button className="btn btn-primary" onClick={loginWithCustomAccount}>Mail inlog link</button>
+                </div>)
+          }
+        </div>
       </main>
     </div >
   )

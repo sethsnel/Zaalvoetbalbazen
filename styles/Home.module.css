@@ -127,6 +127,16 @@
   margin-left: 0.5rem;
 }
 
+.bg {
+  background: url('/bg.jpg') no-repeat;
+  background-size: cover;
+}
+
+.login {
+  color: #efefef;
+  min-height: 100vh;
+}
+
 .sessionContainer {
   position: relative;
   width: 100%;
