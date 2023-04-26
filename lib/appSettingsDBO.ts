@@ -11,7 +11,7 @@ const useAppSettings = (userId: string) => {
 
     useEffect(() => {
         return onValue(ref(db, `/appSettings`), (snapshot) => {
-            setAppSettings({ ...snapshot.val(), activeSeason: snapshot.val().tempSeason })
+            setAppSettings(snapshot.val())
             setIsLoading(false)
         }, (error) => { setIsLoading(false) }, { onlyOnce: true })
     }, [])
@@ -21,7 +21,7 @@ const useAppSettings = (userId: string) => {
     }
 
     function setCurrentSeason(season: string) {
-        set(ref(db, `/appSettings/tempSeason`), season)
+        set(ref(db, `/appSettings/activeSeason`), season)
         setAppSettings({ ...appSettings, activeSeason: season })
     }
 
