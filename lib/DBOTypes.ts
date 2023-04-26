@@ -1,6 +1,7 @@
 
 export type AppSettings = {
     activeSeason: string
+    seasons: { [key: string]: string }
     sessionLimit: number
     admins: { [userId: string]: boolean }
 }
@@ -10,7 +11,6 @@ export type Season = {
     dates: { [key: string]: number }
     isFetched: boolean
     sessions: Sessions
-    profiles: Profiles
     notifications: Notifications
 }
 
@@ -30,7 +30,6 @@ export type Profile = {
     name?: string
     email?: string
     profilePic?: string
-    joined?: { [key: string]: boolean }
 }
 
 export type Notifications = {

@@ -11,7 +11,7 @@ import styles from '../styles/Home.module.css'
 const Home: NextPage = () => {
   const { user } = useUser()
   const { appSettings } = useAppSettings('')
-  const { profile } = useMyProfile(appSettings?.activeSeason || '', user?.id || '')
+  const { profile } = useMyProfile(user?.id || '')
   const { seasonDates } = useSeasonDates(appSettings?.activeSeason || '')
   const { sessions } = useSessions(appSettings?.activeSeason || '')
   const oldSessions = Object.values(seasonDates || {}).filter(date => date < dayjs().unix())

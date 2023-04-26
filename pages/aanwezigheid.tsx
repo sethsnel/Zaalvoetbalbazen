@@ -1,51 +1,78 @@
-import type { NextPage } from 'next'
-import Image from 'next/image'
+import type { NextPage } from "next";
+import Image from "next/image";
+import dayjs from "dayjs";
 
-import { useProfiles } from '../lib/seasonDBO'
-import { useAppSettings } from '../lib/appSettingsDBO'
+import { useProfiles, useSessions } from "../lib/seasonDBO";
+import { useAppSettings } from "../lib/appSettingsDBO";
 
-import styles from '../styles/Home.module.css'
-import dayjs from 'dayjs'
+import styles from "../styles/Home.module.css";
+import { Profile, Session } from "../lib/DBOTypes";
 
 const SessionManagement: NextPage = () => {
-  const { appSettings } = useAppSettings('')
-  const activeSeason = appSettings?.activeSeason || ''
-  const { profiles } = useProfiles(activeSeason)
+  const { appSettings } = useAppSettings("");
+  const activeSeason = appSettings?.activeSeason || "";
+  const { sessions } = useSessions(activeSeason);
+  const { profiles } = useProfiles();
 
-  const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
+  const fallbackImg =
+    "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg";
+
+  const historicSessions = Object
+    .entries(sessions)
+    .filter(([date, session]) => date as unknown as number < dayjs().unix())
+    .map(([date, session]) => session);
+
+  type ProfileWithSessionsJoined = Profile & { sessionsJoined: number }
+  const activeProfiles = Object
+    .entries(profiles)
+    .reduce<ProfileWithSessionsJoined[]>((acc, [userId, profile]) => {
+      const sessionsJoined = countHistoricSessionsJoined(userId, historicSessions)
+      if (sessionsJoined > 0) {
+        acc.push({ ...profile, sessionsJoined });
+      }
+
+      return acc
+    }, [])
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Zaalvoetbalbazen ADMIN
-        </h1>
+        <h1 className={styles.title}>Zaalvoetbalbazen ADMIN</h1>
 
-        <p>
-          Deelnemer aanwezigheid:
-        </p>
+        <p>Deelnemer aanwezigheid:</p>
 
         <div className={styles.sessions}>
-          {
-            Object.values(profiles).map((profile, index) =>
-              <div key={index} className={`${styles.participientAdminRow} mb-1`}>
-                <Image src={profile?.profilePic || fallbackImg} height={40} width={40} className={styles.picture} objectFit='cover' />
-                <p className={`${styles.name} ms-3 mb-0`}>{profile.name || profile.email}</p>
-                <p className='mb-0 me-1'> {countHistoricSessionsJoined(profile.joined)}</p>
-              </div>
-            )
-          }
+          {Object.values(activeProfiles).map((profile, index) => (
+            <div key={index} className={`${styles.participientAdminRow} mb-1`}>
+              <Image
+                src={profile?.profilePic || fallbackImg}
+                alt="Profile picture"
+                height={40}
+                width={40}
+                className={styles.picture}
+                objectFit="cover"
+              />
+              <p className={`${styles.name} ms-3 mb-0`}>
+                {profile.name || profile.email}
+              </p>
+              <p className="mb-0 me-1">
+                {" "}
+                {profile.sessionsJoined}
+              </p>
+            </div>
+          ))}
         </div>
       </main>
     </div>
-  )
+  );
+};
+
+function countHistoricSessionsJoined(
+  userId: string,
+  sessions: Session[]
+): number {
+  return sessions.filter((session) => session[userId]?.isPresent === true)
+    .length;
 }
 
-function countHistoricSessionsJoined(joined: { [key: string]: boolean } | undefined): number {
-  var sessions = Object.entries(joined ?? {}).filter(([date, joined]) => {
-    return joined && parseInt(date) < dayjs().unix()
-  })
-  return sessions.length
-}
-
-export default SessionManagement
+export default SessionManagement;

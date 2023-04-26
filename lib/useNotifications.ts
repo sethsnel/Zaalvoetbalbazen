@@ -6,9 +6,9 @@ import useLocalStorage from "./useLocalStorage";
 
 const vapidKey = 'BKNAYYQvHbJ2LRseRkUSVQd-zEPt-K-gbJ8ZF4oMKlCWqvd29EZxScLs-ItiSrfj57FMKQBkvI-_Bbb0FZH17kY'
 
-const useNotifications = (season: string, userId: string) => {
+const useNotifications = (userId: string) => {
   const [isDeviceSubscribed, setIsDeviceSubscribed] = useLocalStorage<boolean>(`push-notification-registered`, false)
-  const { upsertNotification, removeNotification } = useNotificationManagement(season, userId)
+  const { upsertNotification, removeNotification } = useNotificationManagement(userId)
   let canRegisterDevice = 'serviceWorker' in navigator
   isSupported().then(deviceSupportsPush => canRegisterDevice &&= deviceSupportsPush )
 

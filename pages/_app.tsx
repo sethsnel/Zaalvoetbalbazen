@@ -22,9 +22,8 @@ dayjs.locale('nl')
 
 function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
   const { user, logout } = useUser()
-  const { appSettings, isAdmin, isLoading } = useAppSettings(user?.id || '')
-  const activeSeason = appSettings?.activeSeason || ''
-  const { profile, isLoading: isLoadingProfile } = useMyProfile(activeSeason, user?.id || '')
+  const { isAdmin, isLoading } = useAppSettings(user?.id || '')
+  const { profile, isLoading: isLoadingProfile } = useMyProfile(user?.id || '')
 
   const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
 
@@ -45,7 +44,7 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
                 <Navbar isAdmin={isAdmin()} profileUrl={profile.profilePic || fallbackImg} logout={logout} />
                 <Component {...pageProps} />
               </>
-              : <UpdateProfile user={user} activeSeason={activeSeason} />
+              : <UpdateProfile user={user} />
           : <LoginForm />
     }
   </>

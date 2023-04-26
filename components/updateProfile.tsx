@@ -8,12 +8,11 @@ import { UserProfile } from '../lib/useUser'
 import styles from '../styles/Home.module.css'
 
 type UpdateProfileProps = {
-  activeSeason: string
   user: UserProfile
 }
 
-const UpdateProfile = ({ activeSeason, user }: UpdateProfileProps) => {
-  const { profile, upsertProfile, uploadFile } = useProfileManagement(activeSeason, user.id)
+const UpdateProfile = ({ user }: UpdateProfileProps) => {
+  const { profile, upsertProfile, uploadFile } = useProfileManagement(user.id)
   const [profileSaved, setProfileSaved] = useState<boolean>(false)
   const [profileError, setProfileError] = useState<boolean>(false)
 

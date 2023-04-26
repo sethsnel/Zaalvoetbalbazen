@@ -19,7 +19,7 @@ const SessionPage: NextPage = () => {
 
   const { appSettings } = useAppSettings(user?.id || '')
   const { sessionData, joinSession, leaveSession } = useSessionData(router.query.season as string, router.query.session as string)
-  const { profiles } = useProfiles(router.query.season as string)
+  const { profiles } = useProfiles()
   const { getPreviousDate, getNextDate } = useSeasonDates(appSettings?.activeSeason || '')
   const previousSession = getPreviousDate(parseInt(router.query.session as string))
   const nextSession = getNextDate(parseInt(router.query.session as string))

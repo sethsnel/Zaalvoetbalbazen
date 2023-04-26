@@ -13,8 +13,8 @@ const Profiel: NextPage = () => {
 
     return (
         <div className={styles.container}>
-            {(user?.id && appSettings?.activeSeason) ?
-                <UpdateProfile user={user} activeSeason={appSettings.activeSeason} /> :
+            {(user?.id) ?
+                <UpdateProfile user={user} /> :
                 <PageLoader fullscreen={true} />}
         </div>
     )

@@ -84,7 +84,6 @@ const useSessionData = (season: string, date: string) => {
             responded_at: dayjs().unix(),
             isPresent: true
         })
-        set(ref(db, `/seasons/${season}/profiles/${userId}/joined/${date}`), true)
     }
 
     function leaveSession(userId: string) {
@@ -93,38 +92,37 @@ const useSessionData = (season: string, date: string) => {
             responded_at: dayjs().unix(),
             isPresent: false
         })
-        remove(ref(db, `/seasons/${season}/profiles/${userId}/joined/${date}`))
     }
 
     return { sessionData, joinSession, leaveSession }
 }
 
-const useProfiles = (season: string) => {
+const useProfiles = () => {
     const initialValue = {}
     const [profiles, setProfiles] = useLocalStorage<Profiles>(`profiles`, initialValue)
     const [isLoading, setIsLoading] = useState<boolean>(profiles === initialValue)
 
     useEffect(() => {
-        return onValue(ref(db, `/seasons/${season}/profiles`), (snapshot) => {
+        return onValue(ref(db, `/profiles`), (snapshot) => {
             const profiles = snapshot.val()
             if (profiles !== null) {
                 setProfiles(profiles)
                 setIsLoading(false)
             }
         }, { onlyOnce: true })
-    }, [season])
+    }, [])
 
     return { profiles, isLoading }
 }
 
-const useMyProfile = (season: string, userId: string) => {
+const useMyProfile = (userId: string) => {
     const initialValue = {}
     const [profile, setProfile] = useLocalStorage<Profile>(`profile`, initialValue)
     const [isLoading, setIsLoading] = useState<boolean>(profile === initialValue)
 
     useEffect(() => {
-        if (season && userId) {
-            return onValue(ref(db, `/seasons/${season}/profiles/${userId}`), (snapshot) => {
+        if (userId) {
+            return onValue(ref(db, `/profiles/${userId}`), (snapshot) => {
                 const profile = snapshot.val()
                 if (profile !== null) {
                     setProfile(profile)
@@ -139,27 +137,27 @@ const useMyProfile = (season: string, userId: string) => {
                 }
             })
         }
-    }, [season, userId])
+    }, [userId])
 
     return { profile, isLoading }
 }
 
-const useProfileManagement = (season: string, userId: string) => {
+const useProfileManagement = (userId: string) => {
     const [profile, setProfile] = useLocalStorage<Profile>(`profileMgt`, {})
 
     useEffect(() => {
         if (!userId) return
-        return onValue(ref(db, `/seasons/${season}/profiles/${userId}`), (snapshot) => {
+        return onValue(ref(db, `/profiles/${userId}`), (snapshot) => {
             setProfile(snapshot.val() || {})
         })
-    }, [season, userId])
+    }, [userId])
 
-    function upsertProfile(userId: string, updatedProfile: Omit<Profile, 'joined'>) {
+    function upsertProfile(userId: string, updatedProfile: Profile) {
         if (profile) {
-            set(ref(db, `/seasons/${season}/profiles/${userId}`), { ...profile, ...updatedProfile })
+            set(ref(db, `/profiles/${userId}`), { ...profile, ...updatedProfile })
         }
         else {
-            set(ref(db, `/seasons/${season}/profiles/${userId}`), profile)
+            set(ref(db, `/profiles/${userId}`), profile)
         }
     }
 
@@ -173,15 +171,15 @@ const useProfileManagement = (season: string, userId: string) => {
     return { profile, upsertProfile, uploadFile }
 }
 
-const useNotificationManagement = (season: string, userId: string) => {
+const useNotificationManagement = (userId: string) => {
     const [notifications, setNotifications] = useLocalStorage<Notifications>(`notifications`, {})
 
     useEffect(() => {
         if (!userId) return
-        return onValue(ref(db, `/seasons/${season}/notifications/${userId}`), (snapshot) => {
+        return onValue(ref(db, `/notifications/${userId}`), (snapshot) => {
             setNotifications(snapshot.val() || {})
         })
-    }, [season, userId])
+    }, [userId])
 
     function upsertNotification(token: string) {
         const newDeviceSubscription: DeviceSubscription = {
@@ -190,11 +188,11 @@ const useNotificationManagement = (season: string, userId: string) => {
             hasFailed: false
         }
 
-        set(ref(db, `/seasons/${season}/notifications/${userId}`), { [token]: newDeviceSubscription, ...notifications })
+        set(ref(db, `/notifications/${userId}`), { [token]: newDeviceSubscription, ...notifications })
     }
 
     function removeNotification(token: string) {
-        remove(ref(db, `/seasons/${season}/notifications/${userId}/${token}`))
+        remove(ref(db, `/notifications/${userId}/${token}`))
     }
 
     return { notifications, upsertNotification, removeNotification }

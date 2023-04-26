@@ -1,7 +1,6 @@
 import { NextPage } from "next"
 import { ChangeEvent } from "react"
 
-import { useAppSettings } from "../lib/appSettingsDBO"
 import { useNotifications } from "../lib/useNotifications"
 import { useUser } from "../lib/useUser"
 
@@ -9,8 +8,7 @@ import styles from '../styles/Home.module.css'
 
 const Voorkeuren: NextPage = () => {
     const { user } = useUser()
-    const { appSettings } = useAppSettings('')
-    const { isDeviceSubscribed, canRegisterDevice, subscribeDevice, unSubscribeDevice } = useNotifications(appSettings.activeSeason, user?.id || '')
+    const { isDeviceSubscribed, canRegisterDevice, subscribeDevice, unSubscribeDevice } = useNotifications(user?.id || '')
 
     const onToggleNotifications = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
