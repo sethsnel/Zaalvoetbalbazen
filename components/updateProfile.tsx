@@ -73,6 +73,7 @@ const UpdateProfile = ({ user }: UpdateProfileProps) => {
             <label className="input-group-text" htmlFor="afbeelding">Profielfoto</label>
           </div>
           <button className="btn btn-primary mt-3" onClick={submitProfile}>Profiel bijwerken</button>
+          <Link href='/wachtwoord-wijzigen'><button className="btn btn-secondary mt-3">Wachtwoord wijzigen</button></Link>
         </div>
 
         {profileSaved && <div className="alert alert-success d-flex align-items-center mt-5" role="alert">

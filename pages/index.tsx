@@ -32,8 +32,6 @@ const Home: NextPage = () => {
     user?.id || ""
   );
 
-  console.info("Index page");
-
   const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
     if (!session || !session[user?.id || ""]) {
       return (
@@ -91,8 +89,6 @@ const Home: NextPage = () => {
       </div>
     );
   };
-
-  console.info(upcommingDate);
 
   return (
     <div className={styles.container}>

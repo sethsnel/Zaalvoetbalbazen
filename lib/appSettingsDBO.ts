@@ -29,7 +29,6 @@ const useAppSettings = (userId: string) => {
         const urlEncodedSeason = encodeURI(season)
         const newSeasons = { ...appSettings.seasons, [urlEncodedSeason]: urlEncodedSeason }
         set(ref(db, `/appSettings/seasons`), newSeasons)
-        console.info(`/seasons/${urlEncodedSeason}/title`)
         set(ref(db, `/seasons/${urlEncodedSeason}/title`), season)
         setAppSettings({ ...appSettings, seasons: newSeasons })
     }
