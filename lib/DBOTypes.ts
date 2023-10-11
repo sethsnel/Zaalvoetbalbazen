@@ -1,5 +1,6 @@
 
 export type AppSettings = {
+    title: string
     activeSeason: string
     seasons: { [key: string]: string }
     sessionLimit: number

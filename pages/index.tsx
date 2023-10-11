@@ -93,7 +93,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Welkom bij zaalvoetbalbazen!</h1>
+        <h1 className={styles.title}>Welkom bij {appSettings.title}!</h1>
 
         <div className={styles.sessions}>
           <p className="fw-bold w-100 mb-1">Eerstvolgende</p>

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 
 import { useSeasonDatesManagement } from "../lib/seasonDBO";
 import { useAppSettings } from "../lib/appSettingsDBO";
+import uppercaseFirst from "../lib/upperCaseFirst";
 
 import styles from "../styles/Home.module.css";
 
@@ -21,7 +22,7 @@ const SessionManagement: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Zaalvoetbalbazen ADMIN</h1>
+        <h1 className={styles.title}>{uppercaseFirst(appSettings.title)} ADMIN</h1>
 
         <p>Alle sessies:</p>
 

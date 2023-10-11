@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 
 import { useProfiles, useSessions } from "../lib/seasonDBO";
 import { useAppSettings } from "../lib/appSettingsDBO";
+import uppercaseFirst from "../lib/upperCaseFirst";
 
 import styles from "../styles/Home.module.css";
 import { Profile, Session } from "../lib/DBOTypes";
@@ -37,7 +38,7 @@ const SessionManagement: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Zaalvoetbalbazen ADMIN</h1>
+        <h1 className={styles.title}>{uppercaseFirst(appSettings.title)} ADMIN</h1>
 
         <p>Deelnemer aanwezigheid:</p>
 

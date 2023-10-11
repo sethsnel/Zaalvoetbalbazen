@@ -4,6 +4,8 @@ import { BsGoogle } from 'react-icons/bs'
 import { MdEmail, MdPassword } from 'react-icons/md'
 
 import { authInstance } from '../lib/firebaseConfig'
+import uppercaseFirst from '../lib/upperCaseFirst'
+import { useAppSettings } from '../lib/appSettingsDBO'
 
 import PageLoader from './pageLoader'
 import styles from '../styles/Home.module.css'
@@ -19,6 +21,7 @@ const LoginForm = () => {
   const [loginWithEmail, setLoginWithEmail] = useState<boolean>(false)
   const [loginWithPassword, setLoginWithPassword] = useState<boolean>(false)
   const [loggingInState, setLoggingInState] = useState<loggingInState>({ loggingIn: false })
+  const { appSettings } = useAppSettings("");
 
   const loginWithGoogle = () => {
     setLoggingInState({ ...loggingInState, loggingIn: true })
@@ -51,7 +54,7 @@ const LoginForm = () => {
       <main className={styles.main}>
         <div className='mt-auto mb-auto'>
           <h1 style={{ textAlign: 'center' }}>
-            Zaalvoetbal bazen
+            {uppercaseFirst(appSettings?.title)}
           </h1>
 
           {
