@@ -179,7 +179,7 @@
   margin: 0 0 1em 0;
 }
 
-.participientInfo {
+.participientInfo, .guestInfo {
   display: flex;
   flex-grow: 1;
   flex-direction: row;

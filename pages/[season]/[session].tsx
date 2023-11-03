@@ -12,26 +12,31 @@ import { useAppSettings } from '../../lib/appSettingsDBO'
 import { useUser } from '../../lib/useUser'
 
 import styles from '../../styles/Home.module.css'
+import RegisterGuest from '../../components/registerGuest'
 
 const SessionPage: NextPage = () => {
   const router = useRouter()
   const { user } = useUser()
 
   const { appSettings } = useAppSettings(user?.id || '')
-  const { sessionData, joinSession, leaveSession } = useSessionData(router.query.season as string, router.query.session as string)
+  const { sessionData, joinSession, leaveSession, removeGuest } = useSessionData(router.query.season as string, router.query.session as string)
   const { profiles } = useProfiles()
   const { getPreviousDate, getNextDate } = useSeasonDates(appSettings?.activeSeason || '')
   const previousSession = getPreviousDate(parseInt(router.query.session as string))
   const nextSession = getNextDate(parseInt(router.query.session as string))
 
   const participients = Object.entries(sessionData).sort(function (a, b) { return a[1].responded_at - b[1].responded_at })
+  const guests = participients.filter(p => p[1].guests?.length > 0).reduce((acc: string[], [userId, participient]) => {
+    return acc.concat(participient.guests)
+  }, [])
 
   const sessionLimit = appSettings?.sessionLimit || 0
   const hasntResponded = !Object.keys(sessionData).includes(user?.id ?? '')
   const isPresent = sessionData[user?.id || '']?.isPresent ?? false
-  const amountJoined = participients.filter(p => p[1].isPresent).length
+  const amountJoined = participients.filter(p => p[1].isPresent).length + guests.length
   const canJoin = isPresent || amountJoined < sessionLimit
   const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
+  const canDeleteGuest = (guest: string) => sessionData[user?.id || '']?.guests?.includes(guest) ?? false
 
   const onChangeStatus = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === 'join') {
@@ -82,6 +87,8 @@ const SessionPage: NextPage = () => {
           </div>
         </div>
 
+        { canJoin && <RegisterGuest hasntResponded={hasntResponded} /> }
+
         {/* {
           !isPresent && hasntResponded && (
           <div className={styles.sessionButtons}>
@@ -105,6 +112,26 @@ const SessionPage: NextPage = () => {
             }
           </div>
         </div>
+
+        {guests.length > 0 && (<div className="mt-3 w-100">
+          <p>Gasten</p>
+          <div className={styles.participients}>
+            {
+              //@ts-ignore
+              guests.map((guest, index) =>
+                <div key={index} className={styles.participientRow}>
+                  <Image src={fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+                  <div className={`${styles.guestInfo} justify-content-between`}>
+                    <span className='me-1'>{guest}</span>
+                    {/* <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small> */}
+                    {canDeleteGuest(guest) && (<button className="btn btn-outline-danger btn-sm" onClick={() => removeGuest(user?.id ?? '', guest)} >
+                      gast afmelden
+                    </button>)}
+                  </div>
+                </div>)
+            }
+          </div>
+        </div>)}
 
         <div className="mt-3 w-100">
           <p className='fw-bold'>Afwezig ({participients.filter(p => !p[1].isPresent).length})</p>

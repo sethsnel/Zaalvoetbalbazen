@@ -94,7 +94,24 @@ const useSessionData = (season: string, date: string) => {
         })
     }
 
-    return { sessionData, joinSession, leaveSession }
+    function registerGuest(userId: string, guest: string) {
+        if (!date) return
+        set(ref(db, `/seasons/${season}/sessions/${date}/${userId}`), {
+            ...sessionData[userId],
+            guests: [...(sessionData[userId]?.guests || []), guest]
+        })
+    }
+
+    function removeGuest(userId: string, guest: string) {
+        if (!date) return
+        const guests = sessionData[userId]?.guests.filter(g => g !== guest) || []
+        set(ref(db, `/seasons/${season}/sessions/${date}/${userId}`), {
+            ...sessionData[userId],
+            guests
+        })
+    }
+
+    return { sessionData, joinSession, leaveSession, registerGuest, removeGuest }
 }
 
 const useProfiles = () => {

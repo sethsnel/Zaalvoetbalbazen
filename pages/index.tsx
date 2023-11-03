@@ -164,11 +164,18 @@ const SessionLinkComponent = ({
   const peoplePresent = Object.values(sessions[date] || {}).filter(
     (s: any) => s.isPresent
   ).length;
+
+  const guestsPresent = Object.values(sessions[date] || {}).filter(
+    (s: any) => s.guests?.length > 0
+  ).reduce((acc: number, s: any) => acc + s.guests.length, 0);
+
+  const present = peoplePresent + guestsPresent;
+
   let presentBadgeBg = "bg-light text-dark";
   if (presentIndicator) {
-    if (peoplePresent < 6) {
+    if (present < 6) {
       presentBadgeBg = "bg-danger";
-    } else if (peoplePresent < 10) {
+    } else if (present < 10) {
       presentBadgeBg = "bg-warning";
     } else {
       presentBadgeBg = "bg-success";
@@ -181,7 +188,7 @@ const SessionLinkComponent = ({
         {dayjs.unix(date).format("D MMMM")}
         &nbsp;
         <span className={`badge ms-2 ${presentBadgeBg}`}>
-          {peoplePresent}/{limit}
+          {present}/{limit}
         </span>
         &nbsp;{badge}
       </a>
