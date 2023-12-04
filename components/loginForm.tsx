@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
+import { GoogleAuthProvider, isSignInWithEmailLink, sendSignInLinkToEmail, signInWithEmailLink, signInWithRedirect, signInWithEmailAndPassword } from 'firebase/auth'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BsGoogle } from 'react-icons/bs'
 import { MdEmail, MdPassword } from 'react-icons/md'
@@ -25,7 +25,7 @@ const LoginForm = () => {
 
   const loginWithGoogle = () => {
     setLoggingInState({ ...loggingInState, loggingIn: true })
-    signInWithPopup(authInstance, provider)
+    signInWithRedirect(authInstance, provider)
       .then(() => {
         setLoggingInState({ ...loggingInState, loggingIn: false })
       })
