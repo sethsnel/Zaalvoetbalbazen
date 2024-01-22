@@ -1,27 +1,22 @@
-import type { NextPage } from "next";
-import Image from "next/image";
-import dayjs from "dayjs";
+import type { NextPage } from "next"
+import Image from "next/image"
+import dayjs from "dayjs"
 
-import { useProfiles, useSessions } from "../lib/seasonDBO";
-import { useAppSettings } from "../lib/appSettingsDBO";
-import uppercaseFirst from "../lib/upperCaseFirst";
+import { useProfiles, useSessions } from "../lib/seasonDBO"
+import { useAppSettings } from "../lib/appSettingsDBO"
+import uppercaseFirst from "../lib/upperCaseFirst"
 
-import styles from "../styles/Home.module.css";
-import { Profile, Session } from "../lib/DBOTypes";
+import styles from "../styles/Home.module.css"
+import { Profile, Session } from "../lib/DBOTypes"
 
 const SessionManagement: NextPage = () => {
-  const { appSettings } = useAppSettings("");
-  const activeSeason = appSettings?.activeSeason || "";
-  const { sessions } = useSessions(activeSeason);
-  const { profiles } = useProfiles();
+  const { appSettings } = useAppSettings("")
+  const activeSeason = appSettings?.activeSeason || ""
+  const { historicSessions } = useSessions(activeSeason)
+  const { profiles } = useProfiles()
 
   const fallbackImg =
-    "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg";
-
-  const historicSessions = Object
-    .entries(sessions)
-    .filter(([date, session]) => date as unknown as number < dayjs().unix())
-    .map(([date, session]) => session);
+    "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
 
   type ProfileWithSessionsJoined = Profile & { sessionsJoined: number }
   const activeProfiles = Object
@@ -29,7 +24,7 @@ const SessionManagement: NextPage = () => {
     .reduce<ProfileWithSessionsJoined[]>((acc, [userId, profile]) => {
       const sessionsJoined = countHistoricSessionsJoined(userId, historicSessions)
       if (sessionsJoined > 0) {
-        acc.push({ ...profile, sessionsJoined });
+        acc.push({ ...profile, sessionsJoined })
       }
 
       return acc
@@ -65,15 +60,15 @@ const SessionManagement: NextPage = () => {
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
-function countHistoricSessionsJoined(
+export function countHistoricSessionsJoined(
   userId: string,
   sessions: Session[]
 ): number {
   return sessions.filter((session) => session[userId]?.isPresent === true)
-    .length;
+    .length
 }
 
-export default SessionManagement;
+export default SessionManagement

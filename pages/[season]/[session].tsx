@@ -7,12 +7,13 @@ import { ChangeEvent } from 'react'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { FcPrevious, FcNext } from 'react-icons/fc'
 
-import { useProfiles, useSeasonDates, useSessionData } from '../../lib/seasonDBO'
+import { useProfiles, useSeasonDates, useSessionData, useSessions } from '../../lib/seasonDBO'
 import { useAppSettings } from '../../lib/appSettingsDBO'
 import { useUser } from '../../lib/useUser'
 
 import styles from '../../styles/Home.module.css'
 import RegisterGuest from '../../components/registerGuest'
+import { countHistoricSessionsJoined } from '../aanwezigheid'
 
 const SessionPage: NextPage = () => {
   const router = useRouter()
@@ -22,6 +23,7 @@ const SessionPage: NextPage = () => {
   const { sessionData, joinSession, leaveSession, removeGuest } = useSessionData(router.query.season as string, router.query.session as string)
   const { profiles } = useProfiles()
   const { getPreviousDate, getNextDate } = useSeasonDates(appSettings?.activeSeason || '')
+  const { historicSessions } = useSessions(appSettings?.activeSeason || '')
   const previousSession = getPreviousDate(parseInt(router.query.session as string))
   const nextSession = getNextDate(parseInt(router.query.session as string))
 
@@ -29,6 +31,16 @@ const SessionPage: NextPage = () => {
   const guests = participients.filter(p => p[1].guests?.length > 0).reduce((acc: string[], [userId, participient]) => {
     return acc.concat(participient.guests)
   }, [])
+  const activeProfiles = Object
+    .entries(profiles)
+    .reduce<string[]>((acc, [userId, profile]) => {
+      const sessionsJoined = countHistoricSessionsJoined(userId, historicSessions)
+      if (sessionsJoined > 0) {
+        acc.push(userId)
+      }
+      return acc
+    }, [])
+  const didNotReact = Object.entries(profiles).filter((p) => !(p[0] in sessionData) && activeProfiles.includes(p[0]))
 
   const sessionLimit = appSettings?.sessionLimit || 0
   const hasntResponded = !Object.keys(sessionData).includes(user?.id ?? '')
@@ -87,7 +99,7 @@ const SessionPage: NextPage = () => {
           </div>
         </div>
 
-        { canJoin && <RegisterGuest hasntResponded={hasntResponded} /> }
+        {canJoin && <RegisterGuest hasntResponded={hasntResponded} />}
 
         {/* {
           !isPresent && hasntResponded && (
@@ -144,6 +156,23 @@ const SessionPage: NextPage = () => {
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
                     <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small>
+                  </div>
+                </div>)
+            }
+          </div>
+        </div>
+
+        <div className="mt-3 w-100">
+          <p className='fw-bold'>Nog niet gereageerd ({didNotReact.length})</p>
+          <div className={styles.participients}>
+            {
+              //@ts-ignore
+              didNotReact.map(([userId, profile], index) =>
+                <div key={index} className={styles.participientRow}>
+                  <Image src={profile?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+                  <div className={styles.participientInfo}>
+                    <span className='me-1'>{profile?.name || profile?.email}</span>
+                    {/* <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small> */}
                   </div>
                 </div>)
             }

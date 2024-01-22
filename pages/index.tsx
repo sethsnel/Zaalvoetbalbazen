@@ -1,36 +1,36 @@
-import type { NextPage } from "next";
-import dayjs from "dayjs";
-import Link from "next/link";
-import Image from "next/image";
+import type { NextPage } from "next"
+import dayjs from "dayjs"
+import Link from "next/link"
+import Image from "next/image"
 import {
   BsCheckCircleFill,
   BsXCircleFill,
-} from "react-icons/bs";
+} from "react-icons/bs"
 
-import { useMyProfile, useSeasonDates, useSessions } from "../lib/seasonDBO";
-import { useAppSettings } from "../lib/appSettingsDBO";
-import { useUser } from "../lib/useUser";
+import { useMyProfile, useSeasonDates, useSessions } from "../lib/seasonDBO"
+import { useAppSettings } from "../lib/appSettingsDBO"
+import { useUser } from "../lib/useUser"
 
-import styles from "../styles/Home.module.css";
+import styles from "../styles/Home.module.css"
 
 const Home: NextPage = () => {
-  const { user } = useUser();
-  const { appSettings } = useAppSettings("");
-  const { seasonDates } = useSeasonDates(appSettings?.activeSeason || "");
-  const { sessions } = useSessions(appSettings?.activeSeason || "");
+  const { user } = useUser()
+  const { appSettings } = useAppSettings("")
+  const { seasonDates } = useSeasonDates(appSettings?.activeSeason || "")
+  const { sessions } = useSessions(appSettings?.activeSeason || "")
   const [upcommingDate, ...commingWeeks] = Object.values(
     seasonDates || {}
   ).filter(
     (date) =>
       date > dayjs().add(-12, "hours").unix() &&
       date < dayjs().add(4, "weeks").unix()
-  );
+  )
   const later = Object.values(seasonDates || {}).filter(
     (date) => date > dayjs().add(4, "weeks").unix()
-  );
+  )
   const { profile, isLoading: isLoadingProfile } = useMyProfile(
     user?.id || ""
-  );
+  )
 
   const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
     if (!session || !session[user?.id || ""]) {
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
           />
           {/* <span className="text-primary fs-5 position-absolute top-0 start-100 translate-middle"><BsQuestionCircleFill /></span> */}
         </div>
-      );
+      )
     }
 
     if (session && session[user?.id || ""]?.isPresent) {
@@ -68,7 +68,7 @@ const Home: NextPage = () => {
             <BsCheckCircleFill />
           </span>
         </div>
-      );
+      )
     }
 
     return (
@@ -87,8 +87,8 @@ const Home: NextPage = () => {
           <BsXCircleFill />
         </span>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <div className={styles.container}>
@@ -143,8 +143,8 @@ const Home: NextPage = () => {
         </div>
       </main>
     </div>
-  );
-};
+  )
+}
 
 const SessionLinkComponent = ({
   href,
@@ -154,31 +154,31 @@ const SessionLinkComponent = ({
   presentIndicator,
   badge,
 }: {
-  href: string;
-  date: number;
-  sessions: any;
-  limit?: number;
-  presentIndicator?: boolean;
-  badge: JSX.Element;
+  href: string
+  date: number
+  sessions: any
+  limit?: number
+  presentIndicator?: boolean
+  badge: JSX.Element
 }) => {
   const peoplePresent = Object.values(sessions[date] || {}).filter(
     (s: any) => s.isPresent
-  ).length;
+  ).length
 
   const guestsPresent = Object.values(sessions[date] || {}).filter(
     (s: any) => s.guests?.length > 0
-  ).reduce((acc: number, s: any) => acc + s.guests.length, 0);
+  ).reduce((acc: number, s: any) => acc + s.guests.length, 0)
 
-  const present = peoplePresent + guestsPresent;
+  const present = peoplePresent + guestsPresent
 
-  let presentBadgeBg = "bg-light text-dark";
+  let presentBadgeBg = "bg-light text-dark"
   if (presentIndicator) {
     if (present < 6) {
-      presentBadgeBg = "bg-danger";
+      presentBadgeBg = "bg-danger"
     } else if (present < 10) {
-      presentBadgeBg = "bg-warning";
+      presentBadgeBg = "bg-warning"
     } else {
-      presentBadgeBg = "bg-success";
+      presentBadgeBg = "bg-success"
     }
   }
 
@@ -193,7 +193,7 @@ const SessionLinkComponent = ({
         &nbsp;{badge}
       </a>
     </Link>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
