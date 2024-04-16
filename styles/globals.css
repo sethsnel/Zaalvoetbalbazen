@@ -7,9 +7,9 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-button.btn {
+/* button.btn {
   padding: 1rem;
-}
+} */
 
 @media (max-width: 800px) {
   html, body {

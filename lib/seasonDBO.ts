@@ -19,7 +19,10 @@ const useSeasonDatesManagement = (seasonKey: string) => {
   }, [seasonKey])
 
   function addSessionDate(date: number) {
-    update(ref(db, `/seasons/${seasonKey}/dates`), { ...seasonDates, [date]: date })
+    update(ref(db, `/seasons/${seasonKey}/dates`), {
+      ...seasonDates,
+      [date]: date
+    })
   }
 
   function removeSessionDate(date: number) {
@@ -33,23 +36,29 @@ const useSeasonDatesManagement = (seasonKey: string) => {
 }
 
 const useSeasonDates = (seasonKey: string) => {
-  const [seasonDates, setSeasonDates] = useLocalStorage<{ [key: string]: number }>(`seasonDates`)
+  const [seasonDates, setSeasonDates] = useLocalStorage<{
+    [key: string]: number
+  }>(`seasonDates`)
 
   useEffect(() => {
-    return onValue(ref(db, `/seasons/${seasonKey}/dates`), (snapshot) => {
-      setSeasonDates({ ...snapshot.val() })
-    }, { onlyOnce: true })
+    return onValue(
+      ref(db, `/seasons/${seasonKey}/dates`),
+      (snapshot) => {
+        setSeasonDates({ ...snapshot.val() })
+      },
+      { onlyOnce: true }
+    )
   }, [seasonKey])
 
   const getPreviousDate = (sessionDate: number): number => {
     return Object.values(seasonDates)
-      .filter(s => s < sessionDate && s > dayjs().add(-12, 'hours').unix())
+      .filter((s) => s < sessionDate && s > dayjs().add(-12, "hours").unix())
       .sort((d1, d2) => d2 - d1)[0]
   }
 
   const getNextDate = (sessionDate: number): number => {
     return Object.values(seasonDates)
-      .filter(s => s > sessionDate)
+      .filter((s) => s > sessionDate)
       .sort((d1, d2) => d1 - d2)[0]
   }
 
@@ -65,12 +74,17 @@ const useSessions = (seasonKey: string) => {
     })
   }, [seasonKey])
 
-  const historicSessions = Object
-    .entries(sessions)
-    .filter(([date, session]) => date as unknown as number < dayjs().unix())
+  const historicSessions = Object.entries(sessions)
+    .filter(([date, session]) => (date as unknown as number) < dayjs().unix())
     .map(([date, session]) => session)
 
-  return { sessions, historicSessions }
+  const getHistoricSessions = (dateFrom: number, dateTo: number) => {
+    return Object.entries(sessions)
+      .filter(([date, session]) => (date as unknown as number) >= dateFrom && (date as unknown as number) <= dateTo)
+      .map(([date, session]) => session)
+  }
+
+  return { sessions, historicSessions, getHistoricSessions }
 }
 
 const useSessionData = (season: string, date: string) => {
@@ -109,7 +123,7 @@ const useSessionData = (season: string, date: string) => {
 
   function removeGuest(userId: string, guest: string) {
     if (!date) return
-    const guests = sessionData[userId]?.guests.filter(g => g !== guest) || []
+    const guests = sessionData[userId]?.guests.filter((g) => g !== guest) || []
     set(ref(db, `/seasons/${season}/sessions/${date}/${userId}`), {
       ...sessionData[userId],
       guests
@@ -125,13 +139,17 @@ const useProfiles = () => {
   const [isLoading, setIsLoading] = useState<boolean>(profiles === initialValue)
 
   useEffect(() => {
-    return onValue(ref(db, `/profiles`), (snapshot) => {
-      const profiles = snapshot.val()
-      if (profiles !== null) {
-        setProfiles(profiles)
-        setIsLoading(false)
-      }
-    }, { onlyOnce: true })
+    return onValue(
+      ref(db, `/profiles`),
+      (snapshot) => {
+        const profiles = snapshot.val()
+        if (profiles !== null) {
+          setProfiles(profiles)
+          setIsLoading(false)
+        }
+      },
+      { onlyOnce: true }
+    )
   }, [])
 
   return { profiles, isLoading }
@@ -144,20 +162,23 @@ const useMyProfile = (userId: string) => {
 
   useEffect(() => {
     if (userId) {
-      return onValue(ref(db, `/profiles/${userId}`), (snapshot) => {
-        const profile = snapshot.val()
-        if (profile !== null) {
-          setProfile(profile)
-        }
-        setIsLoading(false)
-      }, (error) => {
-        if (error.message.includes('permission_denied')) {
-          window.location.reload()
-        }
-        else {
+      return onValue(
+        ref(db, `/profiles/${userId}`),
+        (snapshot) => {
+          const profile = snapshot.val()
+          if (profile !== null) {
+            setProfile(profile)
+          }
           setIsLoading(false)
+        },
+        (error) => {
+          if (error.message.includes("permission_denied")) {
+            window.location.reload()
+          } else {
+            setIsLoading(false)
+          }
         }
-      })
+      )
     }
   }, [userId])
 
@@ -177,15 +198,14 @@ const useProfileManagement = (userId: string) => {
   function upsertProfile(userId: string, updatedProfile: Profile) {
     if (profile) {
       set(ref(db, `/profiles/${userId}`), { ...profile, ...updatedProfile })
-    }
-    else {
+    } else {
       set(ref(db, `/profiles/${userId}`), profile)
     }
   }
 
   const uploadFile = async (userId: string, file: File): Promise<string> => {
     const storageInstance = getStorage(firebaseApp)
-    const imagesRef = storageRef(storageInstance, `profilePictures/${userId}/profile.${file.name.split('.').pop()}`)
+    const imagesRef = storageRef(storageInstance, `profilePictures/${userId}/profile.${file.name.split(".").pop()}`)
     const uploadTask = await uploadBytes(imagesRef, file)
     return await getDownloadURL(uploadTask.ref)
   }
@@ -210,7 +230,10 @@ const useNotificationManagement = (userId: string) => {
       hasFailed: false
     }
 
-    set(ref(db, `/notifications/${userId}`), { [token]: newDeviceSubscription, ...notifications })
+    set(ref(db, `/notifications/${userId}`), {
+      [token]: newDeviceSubscription,
+      ...notifications
+    })
   }
 
   function removeNotification(token: string) {
@@ -220,4 +243,14 @@ const useNotificationManagement = (userId: string) => {
   return { notifications, upsertNotification, removeNotification }
 }
 
-export { db, useSeasonDates, useSeasonDatesManagement, useSessions, useSessionData, useProfiles, useMyProfile, useProfileManagement, useNotificationManagement }
+export {
+  db,
+  useSeasonDates,
+  useSeasonDatesManagement,
+  useSessions,
+  useSessionData,
+  useProfiles,
+  useMyProfile,
+  useProfileManagement,
+  useNotificationManagement
+}
