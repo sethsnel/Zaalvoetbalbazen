@@ -71,9 +71,9 @@ const LoginForm = () => {
                   { loginWithPassword && <SignInWithPasswordForm setLoggingInState={setLoggingInState} setLoginWithPassword={setLoginWithPassword} loggingInState={loggingInState} loginWithPassword={loginWithPassword} /> }
                   { !loginWithEmail && !loginWithPassword && (
                     <div style={{ display: 'flex', minHeight: '15em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
-                      <button className={'btn btn-primary shadow ' + styles.buttonWithIcon} onClick={loginWithGoogle}><BsGoogle /> Login met Google</button>
-                      <button className={'btn btn-secondary shadow ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}><MdEmail /> Login met e-mail</button>
-                      <button className={'btn btn-secondary shadow ' + styles.buttonWithIcon} onClick={() => setLoginWithPassword(!loginWithPassword)}><MdPassword /> Login met wachtwoord</button>
+                      <button className={'btn btn-primary shadow pb-3 pt-3 ' + styles.buttonWithIcon} onClick={loginWithGoogle}><BsGoogle /> Login met Google</button>
+                      <button className={'btn btn-secondary shadow pb-3 pt-3 ' + styles.buttonWithIcon} onClick={() => setLoginWithEmail(!loginWithEmail)}><MdEmail /> Login met e-mail</button>
+                      <button className={'btn btn-secondary shadow pb-3 pt-3 ' + styles.buttonWithIcon} onClick={() => setLoginWithPassword(!loginWithPassword)}><MdPassword /> Login met wachtwoord</button>
                     </div>
                   )}
                 </>

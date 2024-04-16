@@ -62,28 +62,33 @@ const SessionPage: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <Link href={`/`}>
-          <a className='btn btn-outline-secondary align-self-start d-flex align-items-center gap-1'>
-            <AiOutlineArrowLeft /> Overzicht
-          </a>
+        <Link
+          href={`/`}
+          className='btn btn-outline-secondary align-self-start d-flex align-items-center gap-1'>
+
+          <AiOutlineArrowLeft />Overzicht
         </Link>
 
         <h3 className='mt-4 mb-4 d-flex position-relative align-items-center fw-bold fs-4 w-100 justify-content-center'>
-          {previousSession && (<Link href={`/${appSettings?.activeSeason}/${previousSession}`}>
-            <a className='btn btn-link position-absolute start-0'>
-              <FcPrevious />
-            </a>
-          </Link>)}
+          {previousSession && ((<Link
+            href={`/${appSettings?.activeSeason}/${previousSession}`}
+            className='btn btn-link position-absolute start-0'>
+
+            <FcPrevious />
+
+          </Link>))}
           Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')}
-          {nextSession && (<Link href={`/${appSettings?.activeSeason}/${nextSession}`}>
-            <a className='btn btn-link position-absolute end-0'>
-              <FcNext />
-            </a>
-          </Link>)}
+          {nextSession && ((<Link
+            href={`/${appSettings?.activeSeason}/${nextSession}`}
+            className='btn btn-link position-absolute end-0'>
+
+            <FcNext />
+
+          </Link>))}
         </h3>
 
         <div className={styles.participientRow}>
-          <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+          <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
           {/* <div className={`d-flex align-items-center fs-5 ${styles.participientInfo}`}>
             <label className="form-check-label" htmlFor="my-status" style={{ cursor: 'pointer' }}>deelname:</label>
             <div className="form-check form-switch ms-2 fs-4">
@@ -115,7 +120,7 @@ const SessionPage: NextPage = () => {
               //@ts-ignore
               participients.filter(p => p[1].isPresent).map(([userId, participient], index) =>
                 <div key={index} title={dayjs.unix(participient.responded_at).format('D MMMM HH:mm')} className={styles.participientRow}>
-                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
                     <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small>
@@ -132,7 +137,7 @@ const SessionPage: NextPage = () => {
               //@ts-ignore
               guests.map((guest, index) =>
                 <div key={index} className={styles.participientRow}>
-                  <Image src={fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+                  <Image src={fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
                   <div className={`${styles.guestInfo} justify-content-between`}>
                     <span className='me-1'>{guest}</span>
                     {/* <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small> */}
@@ -152,7 +157,7 @@ const SessionPage: NextPage = () => {
               //@ts-ignore
               participients.filter(p => !p[1].isPresent).map(([userId, participient], index) =>
                 <div key={index} title={dayjs.unix(participient.responded_at).format('D MMMM HH:mm')} className={styles.participientRow}>
-                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+                  <Image src={profiles[userId]?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profiles[userId]?.name || profiles[userId]?.email}</span>
                     <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small>
@@ -169,7 +174,7 @@ const SessionPage: NextPage = () => {
               //@ts-ignore
               didNotReact.map(([userId, profile], index) =>
                 <div key={index} className={styles.participientRow}>
-                  <Image src={profile?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' />
+                  <Image src={profile?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
                   <div className={styles.participientInfo}>
                     <span className='me-1'>{profile?.name || profile?.email}</span>
                     {/* <small className='text-muted'>{dayjs.unix(participient.responded_at).format('D MMMM')}</small> */}
@@ -180,7 +185,7 @@ const SessionPage: NextPage = () => {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
 export default SessionPage

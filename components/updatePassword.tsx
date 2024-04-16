@@ -76,11 +76,11 @@ const UpdatePassword = ({ user }: UpdateProfileProps) => {
             <input ref={passwordConfirmInputRef} id="password-repeat" type="password" className="form-control" placeholder="herhaal wachtwoord" aria-label="password-repeat" aria-describedby="password-repeat" defaultValue={''} />
           </div>
           <button className="btn btn-primary mt-3" onClick={submitNewPassword}>Wachtwoord opslaan</button>
-          <Link href='/profiel'><button className="btn btn-secondary mt-3">Terug naar profiel</button></Link>
+          <Link href='/profiel' legacyBehavior><button className="btn btn-secondary mt-3">Terug naar profiel</button></Link>
         </div>
 
         {passwordSaved && <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
-          Wachtwoord bijgewerkt,&nbsp;<Link href="/"><a style={{textDecoration: 'underline'}}>ga naar home</a></Link>
+          Wachtwoord bijgewerkt,&nbsp;<Link href="/" style={{textDecoration: 'underline'}}>ga naar home</Link>
         </div>}
 
         {passwordError && <div className="alert alert-danger d-flex align-items-center mt-5" role="alert">
@@ -88,7 +88,7 @@ const UpdatePassword = ({ user }: UpdateProfileProps) => {
         </div>}
       </main>
     </div>
-  )
+  );
 }
 
 export default UpdatePassword

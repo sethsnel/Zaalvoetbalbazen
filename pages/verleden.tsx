@@ -25,7 +25,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <Image src={profile?.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' />
+        <Image src={profile?.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' alt='profile picture' />
 
         <div className={styles.sessions}>
           <p className='fw-bold'>Verleden:</p>

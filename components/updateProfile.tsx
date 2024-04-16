@@ -57,7 +57,7 @@ const UpdateProfile = ({ user }: UpdateProfileProps) => {
           Vul je profiel aan
         </h3>
 
-        <Image src={fileUrl || myProfile.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' />
+        <Image src={fileUrl || myProfile.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' alt='profile picture' />
 
         <div className='mt-3' style={{ display: 'flex', minHeight: '10em', justifyContent: 'space-evenly', flexDirection: 'column' }}>
           <div className="input-group mb-2" key={myProfile.name}>
@@ -73,11 +73,11 @@ const UpdateProfile = ({ user }: UpdateProfileProps) => {
             <label className="input-group-text" htmlFor="afbeelding">Profielfoto</label>
           </div>
           <button className="btn btn-primary mt-3" onClick={submitProfile}>Profiel bijwerken</button>
-          <Link href='/wachtwoord-wijzigen'><button className="btn btn-secondary mt-3">Wachtwoord wijzigen</button></Link>
+          <Link href='/wachtwoord-wijzigen' legacyBehavior><button className="btn btn-secondary mt-3">Wachtwoord wijzigen</button></Link>
         </div>
 
         {profileSaved && <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
-          Profiel bijgewerkt,&nbsp;<Link href="/"><a style={{textDecoration: 'underline'}}>ga naar home</a></Link>
+          Profiel bijgewerkt,&nbsp;<Link href="/" style={{textDecoration: 'underline'}}>ga naar home</Link>
         </div>}
 
         {profileError && <div className="alert alert-danger d-flex align-items-center mt-5" role="alert">
@@ -85,7 +85,7 @@ const UpdateProfile = ({ user }: UpdateProfileProps) => {
         </div>}
       </main>
     </div>
-  )
+  );
 }
 
 export default UpdateProfile

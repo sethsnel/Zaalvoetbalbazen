@@ -45,6 +45,7 @@ const Home: NextPage = () => {
             width={30}
             className={styles.picture}
             objectFit="cover"
+            alt='profile picture'
           />
           {/* <span className="text-primary fs-5 position-absolute top-0 start-100 translate-middle"><BsQuestionCircleFill /></span> */}
         </div>
@@ -63,6 +64,7 @@ const Home: NextPage = () => {
             width={30}
             className={styles.picture}
             objectFit="cover"
+            alt='profile picture'
           />
           <span className="text-success fs-5 position-absolute top-0 start-100 translate-middle">
             <BsCheckCircleFill />
@@ -82,6 +84,7 @@ const Home: NextPage = () => {
           width={30}
           className={styles.picture}
           objectFit="cover"
+          alt='profile picture'
         />
         <span className="text-danger fs-5 position-absolute top-0 start-100 translate-middle">
           <BsXCircleFill />
@@ -183,17 +186,16 @@ const SessionLinkComponent = ({
   }
 
   return (
-    <Link href={href}>
-      <a>
-        {dayjs.unix(date).format("D MMMM")}
-        &nbsp;
-        <span className={`badge ms-2 ${presentBadgeBg}`}>
-          {present}/{limit}
-        </span>
-        &nbsp;{badge}
-      </a>
-    </Link>
-  )
+    (<Link href={href}>
+
+      {dayjs.unix(date).format("D MMMM")}
+      <span className={`badge ms-2 ${presentBadgeBg}`}>
+        {present}/{limit}
+      </span>
+      {badge}
+
+    </Link>)
+  );
 }
 
 export default Home
