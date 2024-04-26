@@ -248,6 +248,7 @@
 
   .participientRow {
     min-width: 20em;
+    -webkit-backdrop-filter: blur(3px)
   }
 
   .participientInfo {
