@@ -87,14 +87,8 @@ const SessionPage: NextPage = () => {
           </Link>))}
         </h3>
 
-        <div className={styles.participientRow}>
+        <div className={styles.participientRow + ' d-none d-md-flex'} style={{ backdropFilter: 'blur(3px)' }}>
           <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
-          {/* <div className={`d-flex align-items-center fs-5 ${styles.participientInfo}`}>
-            <label className="form-check-label" htmlFor="my-status" style={{ cursor: 'pointer' }}>deelname:</label>
-            <div className="form-check form-switch ms-2 fs-4">
-              <input className="form-check-input" type="checkbox" id="my-status" checked={isPresent} onChange={onChangeStatus} style={{ cursor: 'pointer' }} disabled={!canJoin} />
-            </div>
-          </div> */}
           <div className="btn-group flex-grow-1 ms-4" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" className="btn-check" name="btnradio" id="join" autoComplete="off" checked={isPresent} disabled={!canJoin} onChange={onChangeStatus} />
             <label className="btn btn-outline-primary" htmlFor="join">Aanwezig</label>
@@ -104,7 +98,16 @@ const SessionPage: NextPage = () => {
           </div>
         </div>
 
-        {canJoin && <RegisterGuest hasntResponded={hasntResponded} />}
+        <div className={styles.participientRow + ' d-sm-flex d-md-none bg-opacity-75 bg-white border-top fixed-bottom sticky-md-top m-0 px-3 py-2 shadow shadow-md-none'} style={{ backdropFilter: 'blur(3px)' }}>
+          <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
+          <div className="btn-group flex-grow-1 ms-4" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" className="btn-check" name="btnradio" id="join" autoComplete="off" checked={isPresent} disabled={!canJoin} onChange={onChangeStatus} />
+            <label className="btn btn-outline-primary" htmlFor="join">Aanwezig</label>
+
+            <input type="radio" className="btn-check" name="btnradio" id="leave" autoComplete="off" checked={!isPresent && !hasntResponded} onChange={onChangeStatus} />
+            <label className="btn btn-outline-primary" htmlFor="leave">Afwezig</label>
+          </div>
+        </div>
 
         {/* {
           !isPresent && hasntResponded && (
@@ -115,6 +118,7 @@ const SessionPage: NextPage = () => {
 
         <div className="mt-3 w-100">
           <p className='fw-bold'>Aanwezig ({amountJoined}/{sessionLimit})</p>
+          {canJoin && <RegisterGuest hasntResponded={hasntResponded} />}
           <div className={styles.participients}>
             {
               //@ts-ignore

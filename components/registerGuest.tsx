@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { BsPersonPlusFill } from "react-icons/bs";
+
 import { useSessionData } from "../lib/seasonDBO";
 import { useUser } from "../lib/useUser";
 
@@ -25,18 +27,18 @@ const RegisterGuest = ({
   let inputComponent = (
     <a
       href="#"
-      className="link-secondary link-underline-secondary text-decoration-underline"
+      className="btn btn-outline-secondary my-3 d-flex flex-row gap-2 align-items-center justify-content-center"
       onClick={(e) => {
         setGuestUser("");
       }}
     >
-      Gast aanmelden
+      <BsPersonPlusFill />Gast aanmelden
     </a>
   );
 
   if (guestUser !== undefined) {
     inputComponent = (
-      <div className="input-group input-group-sm">
+      <div className="input-group input-group-sm mb-4">
         <input
           className="form-control"
           list="datalistOptions"
@@ -52,7 +54,7 @@ const RegisterGuest = ({
     );
   }
 
-  return <div className="container-sm">{inputComponent}</div>;
+  return <div>{inputComponent}</div>;
 };
 
 export default RegisterGuest;
