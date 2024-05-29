@@ -4,7 +4,6 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChangeEvent } from 'react'
-import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { FcPrevious, FcNext } from 'react-icons/fc'
 
 import { useProfiles, useSeasonDates, useSessionData, useSessions } from '../../lib/seasonDBO'
@@ -62,13 +61,6 @@ const SessionPage: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <Link
-          href={`/`}
-          className='btn btn-outline-secondary align-self-start d-flex align-items-center gap-1'>
-
-          <AiOutlineArrowLeft />Overzicht
-        </Link>
-
         <h3 className='mt-4 mb-4 d-flex position-relative align-items-center fw-bold fs-4 w-100 justify-content-center'>
           {previousSession && ((<Link
             href={`/${appSettings?.activeSeason}/${previousSession}`}

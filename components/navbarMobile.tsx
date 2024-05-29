@@ -50,14 +50,14 @@ const Navbar = ({ isAdmin, profileUrl }: { isAdmin: boolean; profileUrl: string 
 
 function MenuItem({ name, href, children }: { name: string; href: string; children: React.ReactNode }) {
   const { pathname } = useRouter()
-  let link = <Link href={href} className='d-flex flex-column align-items-center justify-content-end gap-1 flex-grow-1' style={{ flexBasis: 0}}>
+  let link = <Link href={href} className='d-flex flex-column align-items-center justify-content-end gap-1 flex-grow-1' style={{ flexBasis: 0, fontSize: 14 }}>
     {children}
     {name}
   </Link>
 
   if (pathname === href) {
     link = (
-      <Link href={href} className='d-flex flex-column align-items-center justify-content-end gap-1 flex-grow-1 active text-primary' aria-current='page'  style={{ flexBasis: 0}}>
+      <Link href={href} className='d-flex flex-column align-items-center justify-content-end gap-1 flex-grow-1 active text-primary' aria-current='page'  style={{ flexBasis: 0, fontSize: 14 }}>
         {children}
         {name}
       </Link>
