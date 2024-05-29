@@ -15,7 +15,10 @@ import dynamic from 'next/dynamic'
 import dayjs from 'dayjs'
 import 'dayjs/locale/nl'
 
-const Navbar = dynamic(() => import('../components/navbar').then((mod) => mod.default), {
+const NavbarDesktop = dynamic(() => import('../components/navbarDesktop').then((mod) => mod.default), {
+  ssr: false,
+})
+const NavbarMobile = dynamic(() => import('../components/navbarMobile').then((mod) => mod.default), {
   ssr: false,
 })
 
@@ -42,8 +45,9 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
             <PageLoader fullscreen={true} /> :
             (profile && profile.name) ?
               <>
-                <Navbar isAdmin={isAdmin()} profileUrl={profile.profilePic || fallbackImg} logout={logout} />
+                <NavbarDesktop isAdmin={isAdmin()} profileUrl={profile.profilePic || fallbackImg} logout={logout} />
                 <Component {...pageProps} />
+                <NavbarMobile isAdmin={isAdmin()} profileUrl={profile.profilePic || fallbackImg} />
               </>
               : <UpdateProfile user={user} />
           : <LoginForm />

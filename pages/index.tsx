@@ -98,9 +98,9 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>Welkom bij {appSettings.title}!</h1>
 
-        <div className={styles.sessions}>
-          <p className="fw-bold w-100 mb-1">Eerstvolgende</p>
-          {upcommingDate && (
+        {upcommingDate && (
+          <div className={styles.sessions}>
+            <p className="fw-bold w-100 mb-1">Eerstvolgende</p>
             <div className={styles.sessionContainer}>
               <SessionLinkComponent
                 href={`/${appSettings?.activeSeason}/${upcommingDate}`}
@@ -111,39 +111,43 @@ const Home: NextPage = () => {
                 badge={getMyBadge(sessions[upcommingDate])}
               />
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className={styles.sessions}>
-          <p className="fw-bold w-100 mb-1">Komende weken</p>
-          {commingWeeks.map((date, index) => (
-            <div key={index} className={styles.sessionContainer}>
-              <SessionLinkComponent
-                href={`/${appSettings?.activeSeason}/${date}`}
-                date={date}
-                sessions={sessions}
-                limit={appSettings?.sessionLimit}
-                presentIndicator={true}
-                badge={getMyBadge(sessions[date])}
-              />
-            </div>
-          ))}
-        </div>
+        {(commingWeeks.length > 0) &&
+          <div className={styles.sessions}>
+            <p className="fw-bold w-100 mb-1">Komende weken</p>
+            {commingWeeks.map((date, index) => (
+              <div key={index} className={styles.sessionContainer}>
+                <SessionLinkComponent
+                  href={`/${appSettings?.activeSeason}/${date}`}
+                  date={date}
+                  sessions={sessions}
+                  limit={appSettings?.sessionLimit}
+                  presentIndicator={true}
+                  badge={getMyBadge(sessions[date])}
+                />
+              </div>
+            ))}
+          </div>
+        }
 
-        <div className={styles.sessions}>
-          <p className="fw-bold w-100 mb-1">Toekomst</p>
-          {later.map((date, index) => (
-            <div key={index} className={styles.sessionContainer}>
-              <SessionLinkComponent
-                href={`/${appSettings?.activeSeason}/${date}`}
-                date={date}
-                sessions={sessions}
-                limit={appSettings?.sessionLimit}
-                badge={getMyBadge(sessions[date])}
-              />
-            </div>
-          ))}
-        </div>
+        {(later.length > 0) &&
+          <div className={styles.sessions}>
+            <p className="fw-bold w-100 mb-1">Toekomst</p>
+            {later.map((date, index) => (
+              <div key={index} className={styles.sessionContainer}>
+                <SessionLinkComponent
+                  href={`/${appSettings?.activeSeason}/${date}`}
+                  date={date}
+                  sessions={sessions}
+                  limit={appSettings?.sessionLimit}
+                  badge={getMyBadge(sessions[date])}
+                />
+              </div>
+            ))}
+          </div>
+        }
       </main>
     </div>
   )

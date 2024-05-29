@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ChangeEvent, useRef, useState } from 'react'
 
 import { useProfileManagement } from '../lib/seasonDBO'
-import { UserProfile } from '../lib/useUser'
+import { UserProfile, useUser } from '../lib/useUser'
 
 import styles from '../styles/Home.module.css'
 
@@ -15,6 +15,7 @@ const UpdateProfile = ({ user }: UpdateProfileProps) => {
   const { profile, upsertProfile, uploadFile } = useProfileManagement(user.id)
   const [profileSaved, setProfileSaved] = useState<boolean>(false)
   const [profileError, setProfileError] = useState<boolean>(false)
+  const { logout } = useUser()
 
   const nameInputRef = useRef<null | HTMLInputElement>(null)
   const emailInputRef = useRef<null | HTMLInputElement>(null)
@@ -77,12 +78,16 @@ const UpdateProfile = ({ user }: UpdateProfileProps) => {
         </div>
 
         {profileSaved && <div className="alert alert-success d-flex align-items-center mt-5" role="alert">
-          Profiel bijgewerkt,&nbsp;<Link href="/" style={{textDecoration: 'underline'}}>ga naar home</Link>
+          Profiel bijgewerkt,&nbsp;<Link href="/" style={{ textDecoration: 'underline' }}>ga naar home</Link>
         </div>}
 
         {profileError && <div className="alert alert-danger d-flex align-items-center mt-5" role="alert">
           Profiel niet opgeslagen, geef minimaal een naam op. Bij voorkeur ook een profielfoto.
         </div>}
+
+        <button className='btn btn-outline-danger mt-5 w-100 d-block d-md-none' onClick={logout} type='button'>
+          Uitloggen
+        </button>
       </main>
     </div>
   );
