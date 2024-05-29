@@ -90,7 +90,7 @@ const SessionPage: NextPage = () => {
           </div>
         </div>
 
-        <div className={styles.participientRow + ' d-sm-flex d-md-none bg-opacity-75 bg-white border-top fixed-bottom sticky-md-top m-0 px-3 py-2 shadow shadow-md-none b-5'} style={{ WebkitBackdropFilter: 'blur(3px)', backdropFilter: 'blur(3px)', bottom: '77px' }}>
+        <div className={styles.participientRow + ' d-sm-flex d-md-none bg-opacity-75 bg-white border-top fixed-bottom sticky-md-top m-0 px-3 py-2 shadow shadow-md-none b-5'} style={{ WebkitBackdropFilter: 'blur(3px)', backdropFilter: 'blur(3px)', bottom: '74px' }}>
           <Image src={profiles[user?.id || '']?.profilePic || fallbackImg} height={60} width={60} className={styles.picture} objectFit='cover' alt='profile picture' />
           <div className="btn-group flex-grow-1 ms-4" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" className="btn-check" name="btnradio" id="join" autoComplete="off" checked={isPresent} disabled={!canJoin} onChange={onChangeStatus} />
