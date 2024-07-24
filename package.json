@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3000 --experimental-https",
     "dev-ssl": "npm-run-all --parallel dev ssl-proxy",
-    "ssl-proxy": "local-ssl-proxy --source 3000 --target 3001 --cert localhost.pem --key localhost-key.pem",
+    "ssl-proxy": "local-ssl-proxy --source 3001 --target 3000 --cert localhost.pem --key localhost-key.pem",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -13,8 +13,8 @@
   "dependencies": {
     "bootstrap": "^5.2.1",
     "dayjs": "^1.11.5",
-    "firebase": "^9.14.0",
-    "firebase-admin": "^11.3.0",
+    "firebase": "^10.12.4",
+    "firebase-admin": "^12.2.0",
     "next": "13.5.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",

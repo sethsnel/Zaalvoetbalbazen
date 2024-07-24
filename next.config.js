@@ -26,6 +26,14 @@ const nextConfig = {
       }
     ]
   },
+  async rewrites() {
+    return [
+      {
+        source: '/__/auth/:path*',
+        destination: 'https://zaalvoetbalbazen.firebaseapp.com/__/auth/:path*',
+      },
+    ]
+  },
 }
 
 // const withBundleAnalyzer = require("@next/bundle-analyzer")({
