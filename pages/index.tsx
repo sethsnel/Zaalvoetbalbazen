@@ -99,7 +99,7 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>Welkom bij {appSettings.title}!</h1>
 
         {upcommingDate && (
-          <div className={styles.sessions}>
+          <div className={`${styles.sessions} card`}>
             <p className="fw-bold w-100 mb-1">Eerstvolgende</p>
             <div className={styles.sessionContainer}>
               <SessionLinkComponent
@@ -115,7 +115,7 @@ const Home: NextPage = () => {
         )}
 
         {(commingWeeks.length > 0) &&
-          <div className={styles.sessions}>
+          <div className={`${styles.sessions} card`}>
             <p className="fw-bold w-100 mb-1">Komende weken</p>
             {commingWeeks.map((date, index) => (
               <div key={index} className={styles.sessionContainer}>
@@ -133,7 +133,7 @@ const Home: NextPage = () => {
         }
 
         {(later.length > 0) &&
-          <div className={styles.sessions}>
+          <div className={`${styles.sessions} card`}>
             <p className="fw-bold w-100 mb-1">Toekomst</p>
             {later.map((date, index) => (
               <div key={index} className={styles.sessionContainer}>

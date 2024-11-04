@@ -27,7 +27,7 @@ const Navbar = ({ isAdmin, profileUrl }: { isAdmin: boolean; profileUrl: string 
   }, [expandedMenu])
 
   return (
-    <nav className={`d-flex d-md-none bg-white border-top fixed-bottom m-0 mt-5 px-3 py-2 shadow shadow-md-none flex-row justify-content-around text-secondary`} style={{ zIndex: 10000 }}>
+    <nav className={`d-flex d-md-none bg-body border-top fixed-bottom m-0 mt-5 px-3 py-2 shadow shadow-md-none flex-row justify-content-around text-secondary-emphasis`} style={{ zIndex: 10000 }}>
       <MenuItem name="Overzicht" href="/">
         <BsListUl className="fs-1" />
       </MenuItem>

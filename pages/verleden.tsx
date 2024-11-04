@@ -27,7 +27,7 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <Image src={profile?.profilePic || 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'} height={80} width={80} className={styles.picture} objectFit='cover' alt='profile picture' />
 
-        <div className={styles.sessions}>
+        <div className={`${styles.sessions} card`}>
           <p className='fw-bold'>Verleden:</p>
           {
             oldSessions.map((date, index) =>

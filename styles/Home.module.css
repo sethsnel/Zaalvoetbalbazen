@@ -74,8 +74,8 @@
 
   padding: 0.5em 1em;
   margin: 1em 0 0 0;
-  border-radius: 0.6em;
-  border: solid 1px #ededed;
+  /* border-radius: 0.6em; */
+  /* border: solid 1px #ededed; */
   box-shadow: 0px 3px 0.6rem rgba(0,0,0,0.05);
 
   /* box-shadow:
@@ -89,7 +89,7 @@
   margin-bottom: 0.5rem;
 }
 
-.card {
+/* .card {
   margin: 1rem;
   padding: 1.5rem;
   text-align: left;
@@ -99,7 +99,7 @@
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   max-width: 300px;
-}
+} */
 
 .card:hover,
 .card:focus,

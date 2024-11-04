@@ -23,7 +23,7 @@ const Navbar = ({ logout, isAdmin, profileUrl }: { logout: () => void; isAdmin: 
   }, [expandedMenu])
 
   return (
-    <nav className={`navbar sticky-top navbar-expand-sm ${!isAdmin && 'd-none'} d-md-block navbar-light bg-light`}>
+    <nav className={`navbar sticky-top navbar-expand-sm ${!isAdmin && 'd-none'} d-md-block`}>
       <div className='container-fluid position-relative'>
         <button
           className='navbar-toggler'

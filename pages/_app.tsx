@@ -14,6 +14,8 @@ import PageLoader from '../components/pageLoader'
 import dynamic from 'next/dynamic'
 import dayjs from 'dayjs'
 import 'dayjs/locale/nl'
+import { useEffect } from 'react'
+import { initializeTheme } from "../lib/themeManager"
 
 const NavbarDesktop = dynamic(() => import('../components/navbarDesktop').then((mod) => mod.default), {
   ssr: false,
@@ -30,6 +32,11 @@ function ZaalvoetbalbazenApp({ Component, pageProps }: AppProps) {
   const { profile, isLoading: isLoadingProfile } = useMyProfile(user?.id || '')
 
   const fallbackImg = 'https://craftsnippets.com/articles_images/placeholder/placeholder.jpg'
+
+  useEffect(() => {
+    const cleanup = initializeTheme();
+    return cleanup;  // Dit zorgt voor proper cleanup bij component unmount
+  }, []);
 
   return <>
     <Head>
