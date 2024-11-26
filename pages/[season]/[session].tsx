@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChangeEvent } from 'react'
-import { FcPrevious, FcNext } from 'react-icons/fc'
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 import { useProfiles, useSeasonDates, useSessionData, useSessions } from '../../lib/seasonDBO'
 import { useAppSettings } from '../../lib/appSettingsDBO'
@@ -61,21 +61,19 @@ const SessionPage: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
+        <Link href='/' className='btn btn-dark align-self-start'><FiChevronLeft /> Terug naar overzicht</Link>
+
         <h3 className='mt-4 mb-4 d-flex position-relative align-items-center fw-bold fs-4 w-100 justify-content-center'>
           {previousSession && ((<Link
             href={`/${appSettings?.activeSeason}/${previousSession}`}
-            className='btn btn-link position-absolute start-0'>
-
-            <FcPrevious />
-
+            className='btn btn-link position-absolute start-0'> 
+              <FiChevronLeft />
           </Link>))}
           Sessie {dayjs.unix(router.query.session as unknown as number).format('D MMMM')}
           {nextSession && ((<Link
             href={`/${appSettings?.activeSeason}/${nextSession}`}
             className='btn btn-link position-absolute end-0'>
-
-            <FcNext />
-
+              <FiChevronRight />
           </Link>))}
         </h3>
 
