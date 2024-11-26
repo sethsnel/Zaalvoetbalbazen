@@ -61,7 +61,7 @@ const SessionPage: NextPage = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <Link href='/' className='btn btn-dark align-self-start'><FiChevronLeft /> Terug naar overzicht</Link>
+        <Link href='/' className='btn text-secondary align-self-start'><FiChevronLeft /> Terug naar overzicht</Link>
 
         <h3 className='mt-4 mb-4 d-flex position-relative align-items-center fw-bold fs-4 w-100 justify-content-center'>
           {previousSession && ((<Link
