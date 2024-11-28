@@ -12,6 +12,7 @@ import { useAppSettings } from "../lib/appSettingsDBO"
 import { useUser } from "../lib/useUser"
 
 import styles from "../styles/Home.module.css"
+import { Session, Sessions } from "../lib/DBOTypes"
 
 const Home: NextPage = () => {
   const { user } = useUser()
@@ -31,67 +32,7 @@ const Home: NextPage = () => {
   const { profile, isLoading: isLoadingProfile } = useMyProfile(
     user?.id || ""
   )
-
-  const getMyBadge = (session: { [key: string]: { isPresent: boolean } }) => {
-    if (!session || !session[user?.id || ""]) {
-      return (
-        <div className="position-absolute end-0 top-50 translate-middle me-5 opacity-25">
-          <Image
-            src={
-              profile?.profilePic ||
-              "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
-            }
-            height={30}
-            width={30}
-            className={styles.picture}
-            objectFit="cover"
-            alt='profile picture'
-          />
-          {/* <span className="text-primary fs-5 position-absolute top-0 start-100 translate-middle"><BsQuestionCircleFill /></span> */}
-        </div>
-      )
-    }
-
-    if (session && session[user?.id || ""]?.isPresent) {
-      return (
-        <div className="position-absolute end-0 top-50 translate-middle me-5">
-          <Image
-            src={
-              profile?.profilePic ||
-              "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
-            }
-            height={30}
-            width={30}
-            className={styles.picture}
-            objectFit="cover"
-            alt='profile picture'
-          />
-          <span className="text-success fs-5 position-absolute top-0 start-100 translate-middle">
-            <BsCheckCircleFill />
-          </span>
-        </div>
-      )
-    }
-
-    return (
-      <div className="position-absolute end-0 top-50 translate-middle me-5">
-        <Image
-          src={
-            profile?.profilePic ||
-            "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
-          }
-          height={30}
-          width={30}
-          className={styles.picture}
-          objectFit="cover"
-          alt='profile picture'
-        />
-        <span className="text-danger fs-5 position-absolute top-0 start-100 translate-middle">
-          <BsXCircleFill />
-        </span>
-      </div>
-    )
-  }
+  const limit = appSettings?.sessionLimit;
 
   return (
     <div className={styles.container}>
@@ -105,10 +46,10 @@ const Home: NextPage = () => {
               <SessionLinkComponent
                 href={`/${appSettings?.activeSeason}/${upcommingDate}`}
                 date={upcommingDate}
-                sessions={sessions}
-                limit={appSettings?.sessionLimit}
+                membersPresent={calculateMembersPresent(sessions[upcommingDate] || {})}
+                limit={limit}
                 presentIndicator={true}
-                badge={getMyBadge(sessions[upcommingDate])}
+                badge={getMyBadge(sessions[upcommingDate], limit, user?.id, profile?.profilePic)}
               />
             </div>
           </div>
@@ -122,10 +63,10 @@ const Home: NextPage = () => {
                 <SessionLinkComponent
                   href={`/${appSettings?.activeSeason}/${date}`}
                   date={date}
-                  sessions={sessions}
-                  limit={appSettings?.sessionLimit}
+                  membersPresent={calculateMembersPresent(sessions[date] || {})}
+                  limit={limit}
                   presentIndicator={true}
-                  badge={getMyBadge(sessions[date])}
+                  badge={getMyBadge(sessions[date], limit, user?.id, profile?.profilePic)}
                 />
               </div>
             ))}
@@ -140,9 +81,9 @@ const Home: NextPage = () => {
                 <SessionLinkComponent
                   href={`/${appSettings?.activeSeason}/${date}`}
                   date={date}
-                  sessions={sessions}
-                  limit={appSettings?.sessionLimit}
-                  badge={getMyBadge(sessions[date])}
+                  membersPresent={calculateMembersPresent(sessions[date] || {})}
+                  limit={limit}
+                  badge={getMyBadge(sessions[date], limit, user?.id, profile?.profilePic)}
                 />
               </div>
             ))}
@@ -153,36 +94,88 @@ const Home: NextPage = () => {
   )
 }
 
+const getMyBadge = (session: Session, limit: number, userId?: string, profilePic?: string) => {
+  const isFull = isSessionFull(session, limit)
+  if (!session || !session[userId || ""]) {
+    return (
+      <div className="position-absolute end-0 top-50 translate-middle me-5 opacity-25">
+        <Image
+          src={
+            profilePic ||
+            "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
+          }
+          height={30}
+          width={30}
+          className={styles.picture}
+          objectFit="cover"
+          alt='profile picture'
+        />
+        {/* <span className="text-primary fs-5 position-absolute top-0 start-100 translate-middle"><BsQuestionCircleFill /></span> */}
+      </div>
+    )
+  }
+
+  if (session && session[userId || ""]?.isPresent) {
+    return (
+      <div className="position-absolute end-0 top-50 translate-middle me-5">
+        <Image
+          src={
+            profilePic ||
+            "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
+          }
+          height={30}
+          width={30}
+          className={styles.picture}
+          objectFit="cover"
+          alt='profile picture'
+        />
+        <span className="text-success fs-5 position-absolute top-0 start-100 translate-middle">
+          <BsCheckCircleFill />
+        </span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="position-absolute end-0 top-50 translate-middle me-5">
+      <Image
+        src={
+          profilePic ||
+          "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
+        }
+        height={30}
+        width={30}
+        className={styles.picture}
+        objectFit="cover"
+        alt='profile picture'
+      />
+      <span className="text-danger fs-5 position-absolute top-0 start-100 translate-middle">
+        <BsXCircleFill />
+      </span>
+    </div>
+  )
+}
+
 const SessionLinkComponent = ({
   href,
   date,
-  sessions,
+  membersPresent,
   limit,
   presentIndicator,
   badge,
 }: {
   href: string
   date: number
-  sessions: any
+  membersPresent: number
   limit?: number
   presentIndicator?: boolean
   badge: JSX.Element
 }) => {
-  const peoplePresent = Object.values(sessions[date] || {}).filter(
-    (s: any) => s.isPresent
-  ).length
-
-  const guestsPresent = Object.values(sessions[date] || {}).filter(
-    (s: any) => s.guests?.length > 0
-  ).reduce((acc: number, s: any) => acc + s.guests.length, 0)
-
-  const present = peoplePresent + guestsPresent
-
   let presentBadgeBg = "bg-light text-dark"
   if (presentIndicator) {
-    if (present < 6) {
+    if (membersPresent < 6) {
       presentBadgeBg = "bg-danger"
-    } else if (present < 10) {
+    } else if (membersPresent < 10) {
       presentBadgeBg = "bg-warning"
     } else {
       presentBadgeBg = "bg-success"
@@ -191,15 +184,30 @@ const SessionLinkComponent = ({
 
   return (
     (<Link href={href}>
-
       {dayjs.unix(date).format("D MMMM")}
       <span className={`badge ms-2 ${presentBadgeBg}`}>
-        {present}/{limit}
+        {membersPresent}/{limit}
       </span>
       {badge}
-
     </Link>)
   );
+}
+
+function calculateMembersPresent(session: Session) {
+  const peoplePresent = Object.values(session || {}).filter(
+    (s: any) => s.isPresent
+  ).length
+
+  const guestsPresent = Object.values(session || {}).filter(
+    (s: any) => s.guests?.length > 0
+  ).reduce((acc: number, s: any) => acc + s.guests.length, 0)
+
+  return peoplePresent + guestsPresent
+}
+
+function isSessionFull(session: Session, limit: number) {	
+  const membersPresent = calculateMembersPresent(session)
+  return membersPresent == limit
 }
 
 export default Home
