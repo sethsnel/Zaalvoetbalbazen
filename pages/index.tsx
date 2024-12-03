@@ -69,7 +69,7 @@ const Home: NextPage = () => {
 
         {/* All other future sessions */}
         {(later.length > 0) &&
-          <div className={`${styles.sessions} card`}>
+          <div className={`${styles.sessions} card mb-5`}>
             <p className="fw-bold w-100 mb-1">Toekomst</p>
             {later.map((date, index) => (
               <SessionLinkRow

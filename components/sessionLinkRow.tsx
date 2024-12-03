@@ -1,13 +1,13 @@
 import dayjs from "dayjs"
 import Link from "next/link"
 import Image from "next/image"
+import { FiLock } from "react-icons/fi";
 import {
   BsCheckCircleFill,
   BsXCircleFill,
 } from "react-icons/bs"
 
 import { Session } from "../lib/DBOTypes"
-
 import styles from "../styles/Home.module.css"
 
 type SessionLinkRowProps = {
@@ -35,12 +35,14 @@ const SessionLinkRow = ({
   const badgeClassName = getBadgeClassName(presentIndicator, membersPresent)
 
   return <div className={styles.sessionContainer}>
-    <Link href={sessionHref}>
-      {dayjs.unix(date).format("D MMMM")}
-      <MyBadge session={session} limit={limit} userId={user.id} profilePic={user.profilePic} />
-      <span className={`badge ms-2 ${badgeClassName}`}>
-        {membersPresent}/{limit}
-      </span>
+    <Link href={sessionHref} className="d-flex justify-content-between">
+      {dayjs.unix(date).format("D MMMM") /* Session date */  }
+      <div className="align-items-center d-flex gap-3 justify-content-start">
+        <MyBadge session={session} limit={limit} userId={user.id} profilePic={user.profilePic} />
+        <span className={`badge ${badgeClassName}`}>
+          {membersPresent}/{limit}
+        </span>
+      </div>
     </Link>
   </div>
 }
@@ -65,9 +67,9 @@ const MyBadge = (props: MyBadgeProps) => {
   }
 
   return (
-    <div className="position-absolute end-0 top-50 translate-middle me-5">
-      <Image
-        src={
+    <div className="position-relative">
+      { isFull && !session[userId || ''] ? <FiLock className="text-secondary fs-5" /> : 
+      <Image src={
           profilePic ||
           "https://craftsnippets.com/articles_images/placeholder/placeholder.jpg"
         }
@@ -76,7 +78,7 @@ const MyBadge = (props: MyBadgeProps) => {
         className={styles.picture}
         objectFit="cover"
         alt='profile picture'
-      />
+      /> }
       {userPresentIndicator}
     </div>
   )
@@ -93,6 +95,7 @@ const getBadgeClassName = (presentIndicator: boolean, membersPresent: number) =>
       presentBadgeBg = "bg-success"
     }
   }
+  return presentBadgeBg
 }
 
 function calculateMembersPresent(session: Session) {
