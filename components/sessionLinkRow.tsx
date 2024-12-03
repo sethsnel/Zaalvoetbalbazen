@@ -37,9 +37,9 @@ const SessionLinkRow = ({
   return <div className={styles.sessionContainer}>
     <Link href={sessionHref} className="d-flex justify-content-between">
       {dayjs.unix(date).format("D MMMM") /* Session date */  }
-      <div className="align-items-center d-flex gap-3 justify-content-start">
+      <div className="align-items-center d-flex gap-3 justify-content-end">
         <MyBadge session={session} limit={limit} userId={user.id} profilePic={user.profilePic} />
-        <span className={`badge ${badgeClassName}`}>
+        <span className={`badge text-center ${badgeClassName}`} style={{ width: "2.9rem" }}>
           {membersPresent}/{limit}
         </span>
       </div>
@@ -67,7 +67,7 @@ const MyBadge = (props: MyBadgeProps) => {
   }
 
   return (
-    <div className="position-relative">
+    <div className="position-relative text-center" style={{ width: "1.8rem" }}>
       { isFull && !session[userId || ''] ? <FiLock className="text-secondary fs-5" /> : 
       <Image src={
           profilePic ||
